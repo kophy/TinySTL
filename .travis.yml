@@ -1,0 +1,5 @@
+language: cpp
+compiler:
+  - g++
+# Change this to your needs
+script: make
