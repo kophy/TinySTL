@@ -7,20 +7,36 @@ CXX = g++
 CXXFLAGS = -std=c++0x
 
 .PHONY: all
-all: dir array
+all: dir tinystl_tests
 
+# create directory for executable files
 .PHONY: dir
 dir:
 	@-mkdir $(BIN_DIR)
 
+.PHONY: tinystl_tests
+tinystl_tests: array list
+
 array: $(TEST_DIR)/test_array.cpp $(SRC_DIR)/array.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) $(TEST_DIR)/test_array.cpp -o $(BIN_DIR)/test_array
 
-.PHONY: test
-test:
+list: $(TEST_DIR)/test_list.cpp $(SRC_DIR)/list.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) $(TEST_DIR)/test_list.cpp -o $(BIN_DIR)/test_list
+
+# run all tests
+.PHONY: test_all
+test_all:
 	@chmod +x $(BIN_DIR)/*
 	@echo "testing array..."
 	@./$(BIN_DIR)/test_array
+	@echo "testing list..."
+	@./$(BIN_DIR)/test_list
+
+# run given test
+.PHONY: test
+test:
+	@chmod +x $(BIN_DIR)/*
+	@./$(BIN_DIR)/test_list
 
 .PHONY: clean
 clean:

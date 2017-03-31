@@ -83,7 +83,7 @@ namespace TinySTL {
                 return Iterator<T, N>(this->empty()? nullptr : &this->back());
             }
 
-            /*** 3. Capacity Control ***/
+            /*** 3. Capacity ***/
 
             // checks whether the container is empty
             bool empty() {
