@@ -4,7 +4,7 @@ TEST_DIR = ./test
 BIN_DIR = ./bin
 
 CXX = g++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++0x
 
 .PHONY: all
 all: dir array
