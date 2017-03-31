@@ -1,26 +1,27 @@
-LIBS_DIR = ./3rd-party
-SRCS_DIR = ./src
+LIB_DIR = ./3rd-party
+SRC_DIR = ./src
 TEST_DIR = ./test
-BINS_DIR = ./bin
+BIN_DIR = ./bin
 
 CXX = g++
-CXXFLAGS = -g -Wall -std=c++11
+CXXFLAGS = -std=c++11
 
 .PHONY: all
 all: dir array
 
 .PHONY: dir
 dir:
-	@-mkdir $(BINS_DIR)
+	@-mkdir $(BIN_DIR)
 
-array: $(TEST_DIR)/test_array.cpp $(SRCS_DIR)/array.hpp
-	g++ -I $(LIBS_DIR) -I $(SRCS_DIR) $(TEST_DIR)/test_array.cpp -o $(BINS_DIR)/test_array
+array: $(TEST_DIR)/test_array.cpp $(SRC_DIR)/array.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) $(TEST_DIR)/test_array.cpp -o $(BIN_DIR)/test_array
 
 .PHONY: test
 test:
-	@chmod +x $(BINS_DIR)/*
-	@./$(BINS_DIR)/test_array
+	@chmod +x $(BIN_DIR)/*
+	@echo "testing array..."
+	@./$(BIN_DIR)/test_array
 
 .PHONY: clean
 clean:
-	@rm -rf $(BINS_DIR)
+	@rm -rf $(BIN_DIR)
