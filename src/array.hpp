@@ -37,14 +37,14 @@ namespace TinySTL {
 
             /*** 2. Iterator ***/
 
-            template <typename U, unsigned int M>
+            template <typename U>
             class Iterator {
                 public:
-                    bool operator ==(const Iterator<U, M> &I) {
+                    bool operator ==(const Iterator<U> &I) {
                         return (this->curr == I.curr && this->forward == I.forward);
                     }
 
-                    bool operator !=(const Iterator<U, M> &I) {
+                    bool operator !=(const Iterator<U> &I) {
                         return (this->curr != I.curr || this->forward != I.forward);
                     }
 
@@ -52,13 +52,13 @@ namespace TinySTL {
                         return *curr;
                     }
 
-                    Iterator<U, M> operator ++() {
+                    Iterator<U> operator ++() {
                         advance();
-                        return Iterator<U, M>(this->curr);
+                        return Iterator<U>(this->curr);
                     }
 
-                    Iterator<U, M> operator ++(int dummy) {
-                        Iterator<U, M> temp(this->curr);
+                    Iterator<U> operator ++(int dummy) {
+                        Iterator<U> temp(this->curr);
                         advance();
                         return temp;
                     }
@@ -79,23 +79,23 @@ namespace TinySTL {
             };
 
             // iterator to the beginning
-            Iterator<T, N> begin() {
-                return Iterator<T, N>(this->empty()? nullptr : &this->front());
+            Iterator<T> begin() {
+                return Iterator<T>(this->empty()? nullptr : &this->front());
             }
 
             // iterator to the end
-            Iterator<T, N> end() {
-                return Iterator<T, N>(this->empty()? nullptr : &(this->back()) + 1);
+            Iterator<T> end() {
+                return Iterator<T>(this->empty()? nullptr : &(this->back()) + 1);
             }
 
             // reverse iterator to the beginning
-            Iterator<T, N> rbegin() {
-                return Iterator<T, N>(this->empty()? nullptr : &this->back(), false);
+            Iterator<T> rbegin() {
+                return Iterator<T>(this->empty()? nullptr : &this->back(), false);
             }
 
             // reverse iterator to the end
-            Iterator<T, N> rend() {
-                return Iterator<T, N>(this->empty()? nullptr : (&this->front()) - 1, false);
+            Iterator<T> rend() {
+                return Iterator<T>(this->empty()? nullptr : (&this->front()) - 1, false);
             }
 
             /*** 3. Capacity ***/
