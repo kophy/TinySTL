@@ -84,10 +84,13 @@ namespace TinySTL {
             }
 
             /*** 3. Capacity ***/
+
+            // checks whether the list is empty
             bool empty() {
                 return (N == 0);
             }
 
+            // returns the number of elements
             unsigned int size() {
                 return N;
             }

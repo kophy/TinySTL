@@ -85,7 +85,7 @@ namespace TinySTL {
 
             /*** 3. Capacity ***/
 
-            // checks whether the container is empty
+            // checks whether the array is empty
             bool empty() {
                 return (N == 0);
             }
