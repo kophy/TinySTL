@@ -46,13 +46,13 @@ TEST_CASE("front and back") {
 TEST_CASE("iterator") {
     SECTION("empty array") {
         Array<int, 0> arr;
-        REQUIRE(arr.begin() == arr.end());
+        CHECK(arr.begin() == arr.end());
     }
 
     SECTION("not empty array") {
         Array<int, 5> arr;
-        REQUIRE(arr.begin() == arr.begin());
-        REQUIRE(arr.end() == arr.end());
+        CHECK(arr.begin() == arr.begin());
+        CHECK(arr.end() == arr.end());
     }
 
     SECTION("* and ++") {
@@ -65,7 +65,7 @@ TEST_CASE("iterator") {
             *iter = data[i++];
         i = 0;
         for (auto iter = arr.begin(); iter != arr.end(); iter++)
-            REQUIRE(*iter == data[i++]);
+            CHECK(*iter == data[i++]);
     }
 }
 

@@ -63,7 +63,7 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(U *_curr) : curr(_curr) {}
+                    Iterator(U *_curr = nullptr) : curr(_curr) {}
 
                 private:
                     void advance() {
@@ -73,12 +73,12 @@ namespace TinySTL {
                     U *curr;
             };
 
-            // iterator to the first element
+            // iterator to the beginning
             Iterator<T, N> begin() {
                 return Iterator<T, N>(this->empty()? nullptr : &this->front());
             }
 
-            // iterator to the last element
+            // iterator to the end
             Iterator<T, N> end() {
                 return Iterator<T, N>(this->empty()? nullptr : &this->back());
             }
