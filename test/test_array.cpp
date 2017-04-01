@@ -63,9 +63,39 @@ TEST_CASE("iterator") {
         i = 0;
         for (auto iter = arr.begin(); iter != arr.end(); ++iter)
             *iter = data[i++];
+        CHECK(i == 5);
         i = 0;
         for (auto iter = arr.begin(); iter != arr.end(); iter++)
             CHECK(*iter == data[i++]);
+        CHECK(i == 5);
+    }
+}
+
+TEST_CASE("reverse iterator") {
+    SECTION("empty array") {
+        Array<int, 0> arr;
+        CHECK(arr.rbegin() == arr.rend());
+    }
+
+    SECTION("not empty array") {
+        Array<int, 5> arr;
+        CHECK(arr.rbegin() == arr.rbegin());
+        CHECK(arr.rend() == arr.rend());
+    }
+
+    SECTION("* and ++") {
+        int data[] = {7, 11, 23, 41, 73};
+        int i;
+        Array<int, 5> arr;
+
+        i = 5;
+        for (auto iter = arr.rbegin(); iter != arr.rend(); ++iter)
+            *iter = data[--i];
+        CHECK(i == 0);
+        i = 5;
+        for (auto iter = arr.rbegin(); iter != arr.rend(); iter++)
+            CHECK(*iter == data[--i]);
+        CHECK(i == 0);
     }
 }
 

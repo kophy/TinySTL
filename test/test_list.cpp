@@ -113,6 +113,45 @@ TEST_CASE("iterator") {
     }
 }
 
+TEST_CASE("reverse iterator") {
+    SECTION("empty list") {
+        List<int> l;
+        CHECK(l.rbegin() == l.rend());
+    }
+
+    SECTION("not empty list : traverse") {
+        int data[] = {7, 11, 23, 41, 73};
+        int cnt;
+        List<int> l;
+        for (int i = 0; i < 5; ++i)
+            l.push_back(data[i]);
+        cnt = 0;
+        for (auto iter = l.begin(); iter != l.end(); ++iter)
+            CHECK(*iter == data[cnt++]);
+        CHECK(cnt == 5);
+        cnt = 5;
+        for (auto iter = l.rbegin(); iter != l.rend(); iter++)
+            CHECK(*iter == data[--cnt]);
+        CHECK(cnt == 0);
+    }
+
+    SECTION("not empty list : edit") {
+        int data[] = {7, 11, 23, 41, 73};
+        int cnt;
+        List<int> l;
+        for (int i = 0; i < 5; ++i)
+            l.push_back(data[i]);
+        cnt = 5;
+        for (auto iter = l.rbegin(); iter != l.rend(); ++iter)
+            *iter = 3 * data[--cnt];
+        CHECK(cnt == 0);
+        cnt = 5;
+        for (auto iter = l.rbegin(); iter != l.rend(); iter++)
+            CHECK(*iter == 3 * data[--cnt]);
+        CHECK(cnt == 0);
+    }
+}
+
 TEST_CASE("insert") {
     SECTION("front") {
         List<int> l;
