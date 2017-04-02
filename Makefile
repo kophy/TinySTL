@@ -22,7 +22,11 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: array list stack queue
+tinystl_tests: utils array list vector stack queue
+
+utils: $(TEST_DIR)/test_utils.cpp $(SRC_DIR)/utils.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_utils.cpp -o $(BIN_DIR)/test_utils.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_utils.o -o $(BIN_DIR)/test_utils
 
 array: $(TEST_DIR)/test_array.cpp $(SRC_DIR)/array.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_array.cpp -o $(BIN_DIR)/test_array.o
@@ -31,6 +35,10 @@ array: $(TEST_DIR)/test_array.cpp $(SRC_DIR)/array.hpp
 list: $(TEST_DIR)/test_list.cpp $(SRC_DIR)/list.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_list.cpp -o $(BIN_DIR)/test_list.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_list.o -o $(BIN_DIR)/test_list
+
+vector: $(TEST_DIR)/test_vector.cpp $(SRC_DIR)/vector.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_vector.cpp -o $(BIN_DIR)/test_vector.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_vector.o -o $(BIN_DIR)/test_vector
 
 stack: $(TEST_DIR)/test_stack.cpp $(SRC_DIR)/stack.hpp $(SRC_DIR)/list.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_stack.cpp -o $(BIN_DIR)/test_stack.o
@@ -43,21 +51,13 @@ queue: $(TEST_DIR)/test_queue.cpp $(SRC_DIR)/queue.hpp $(SRC_DIR)/list.hpp
 # run all tests
 .PHONY: test_all
 test_all:
-	@chmod +x $(BIN_DIR)/*
-	@echo "testing array..."
-	@./$(BIN_DIR)/test_array
-	@echo "testing list..."
-	@./$(BIN_DIR)/test_list
-	@echo "testing stack..."
-	@./$(BIN_DIR)/test_stack
-	@echo "testing queue..."
-	@./$(BIN_DIR)/test_queue
+	@sh run_tests.sh
 
 # run given test
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_queue
+	@./$(BIN_DIR)/test_vector
 
 .PHONY: clean
 clean:

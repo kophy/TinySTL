@@ -46,7 +46,7 @@ namespace TinySTL {
                         return (this->curr != I.curr || this->forward != I.forward);
                     }
 
-                    U& operator *() {
+                    U &operator *() {
                         return curr->val;
                     }
 
@@ -65,14 +65,10 @@ namespace TinySTL {
 
                 private:
                     void advance() {
-                        if (forward)
-                            curr = curr->next;
-                        else
-                            curr = curr->prev;
+                        curr = (forward)? curr->next : curr->prev;
                     }
 
                     list_node<U> *curr;
-
                     bool forward;
 
                     friend class List;
@@ -221,15 +217,16 @@ namespace TinySTL {
 
             /*** 5. Constructor and Destructor ***/
 
+            // constructor
             List() : head(nullptr), tail(nullptr), N(0) {}
 
+            // destructor
             ~List() {
                 clear();
             }
 
         private:
             list_node<T> *head, *tail;
-
             unsigned int N;
     };
 };

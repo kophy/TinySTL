@@ -10,10 +10,10 @@ namespace TinySTL {
             /*** 1. Element Access ***/
 
             // access specified elements with bounds checking
-            T &at(int idx) {
-                if (idx < 0 || idx >= N)
+            T &at(int pos) {
+                if (pos < 0 || pos >= N)
                     throw std::out_of_range("index out of range");
-                return data[idx];
+                return data[pos];
             }
 
             // access specified elements
@@ -48,7 +48,7 @@ namespace TinySTL {
                         return (this->curr != I.curr || this->forward != I.forward);
                     }
 
-                    U& operator *() {
+                    U &operator *() {
                         return *curr;
                     }
 
@@ -67,14 +67,10 @@ namespace TinySTL {
 
                 private:
                     void advance() {
-                        if (forward)
-                            ++this->curr;
-                        else
-                            --this->curr;
+                        this->curr += (forward)? 1 : -1;
                     }
 
                     U *curr;
-
                     bool forward;
             };
 
