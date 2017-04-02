@@ -1,14 +1,12 @@
 # Tiny-STL 
 ![travis status](https://travis-ci.com/kophy/TinySTL.svg?token=3xXtB78BvsWT9jzMGmpG&branch=master)
 
-*A toy implementation of STL to practice data structures and algorithms.*
+*A toy implementation of some containers to practice data structures and algorithms.*
 
 ## Plan
 
-### Data Structures  
-
 - [x] Array
-- [ ] List
+- [x] List
 - [ ] Vector
 - [x] Stack
 - [x] Queue
@@ -16,5 +14,6 @@
 - [ ] TreeSet (set)
 - [ ] HashMap (unordered_map)
 - [ ] TreeMap (map)
-
-### Algorithms
+- [ ] Bitset
+- [ ] String
+- [ ] Graph
