@@ -40,11 +40,11 @@ namespace TinySTL {
             class Iterator {
                 public:
                     bool operator ==(const Iterator &I) {
-                        return (this->curr == I.curr && this->forward == I.forward);
+                        return (this->curr == I.curr);
                     }
 
                     bool operator !=(const Iterator &I) {
-                        return (this->curr != I.curr || this->forward != I.forward);
+                        return (this->curr != I.curr);
                     }
 
                     T &operator *() {
@@ -62,15 +62,14 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(T *_curr = nullptr, bool _forword = true) : curr(_curr), forward(_forword) {}
+                    Iterator(T *_curr = nullptr) : curr(_curr) {}
 
                 private:
                     void advance() {
-                        this->curr += (forward)? 1 : -1;
+                        ++curr;
                     }
 
                     T *curr;
-                    bool forward;
 
                 friend class Array<T, N>;
             };
@@ -83,16 +82,6 @@ namespace TinySTL {
             // iterator to the end
             Iterator end() {
                 return Iterator(this->empty()? nullptr : &(this->back()) + 1);
-            }
-
-            // reverse iterator to the beginning
-            Iterator rbegin() {
-                return Iterator(this->empty()? nullptr : &this->back(), false);
-            }
-
-            // reverse iterator to the end
-            Iterator rend() {
-                return Iterator(this->empty()? nullptr : (&this->front()) - 1, false);
             }
 
             /*** 3. Capacity ***/

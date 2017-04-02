@@ -32,7 +32,52 @@ namespace TinySTL {
             }
 
             /*** 2. Iterator ***/
+            class Iterator {
+                public:
+                    bool operator ==(const Iterator &I) {
+                        return (this->curr == I.curr);
+                    }
 
+                    bool operator !=(const Iterator &I) {
+                        return (this->curr != I.curr);
+                    }
+
+                    T &operator *() {
+                        return *curr;
+                    }
+
+                    Iterator operator ++() {
+                        advance();
+                        return Iterator(this->curr);
+                    }
+
+                    Iterator operator ++(int dummy) {
+                        Iterator temp(this->curr);
+                        advance();
+                        return temp;
+                    }
+
+                    Iterator(T *_curr = nullptr) : curr(_curr) {}
+
+                private:
+                    void advance() {
+                        ++curr;
+                    }
+
+                    T *curr;
+
+                friend class Vector<T>;
+            };
+
+            // iterator to the beginning
+            Iterator begin() {
+                return Iterator(this->empty()? nullptr : &this->front());
+            }
+
+            // iterator to the end
+            Iterator end() {
+                return Iterator(this->empty()? nullptr : &(this->back()) + 1);
+            }
 
             /*** 3. Capacity ***/
 
@@ -76,6 +121,36 @@ namespace TinySTL {
                 --used;
             }
 
+            // insert elements
+            Iterator insert(Iterator pos, const T &val) {
+                if (this->empty()) {
+                    push_back(val);
+                    return this->begin();
+                } else {
+                    if (used >= capacity)
+                        this->resize(Max(1u, 2 * capacity));
+                    unsigned int pivot = pos.curr - data;
+                    for (int i = used; i > pivot; --i)
+                        data[i] = data[i - 1];
+                    data[pivot] = val;
+                    ++used;
+                    return Iterator(data + pivot);
+                }
+            }
+
+            // erase elements
+            Iterator erase(Iterator pos) {
+                if (this->empty() || pos == this->end()) {
+                    return pos;
+                } else {
+                    unsigned int pivot = pos.curr - data;
+                    for (int i = pivot; i < used; ++i)
+                        data[i] = data[i + 1];
+                    --used;
+                    return Iterator(data + pivot);
+                }
+            }
+
             // clear content
             void clear() {
                 delete data;
@@ -97,6 +172,8 @@ namespace TinySTL {
         private:
             T *data;
             unsigned int used, capacity;
+
+        friend Iterator;
     };
 };
 

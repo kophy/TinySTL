@@ -1,4 +1,4 @@
-# Tiny-STL 
+# Tiny-STL
 ![travis status](https://travis-ci.com/kophy/TinySTL.svg?token=3xXtB78BvsWT9jzMGmpG&branch=master)
 
 *A toy implementation of some basic containers to practice data structures and algorithms.*  
@@ -17,12 +17,6 @@
 - [ ] HashMap (unordered_map)
 - [ ] TreeMap (map)
 - [ ] Bitset
-- [ ] String
 
 ### Not STL Containers
-- [ ] Heap
 - [ ] Graph
-- [ ] SkipList
-- [ ] SuffiXTree
-- [ ] Trie
-- [ ] UnionFindSet

@@ -38,11 +38,11 @@ namespace TinySTL {
             class Iterator {
                 public:
                     bool operator ==(const Iterator &I) {
-                        return (this->curr == I.curr && this->forward == I.forward);
+                        return (this->curr == I.curr);
                     }
 
                     bool operator !=(const Iterator &I) {
-                        return (this->curr != I.curr || this->forward != I.forward);
+                        return (this->curr != I.curr);
                     }
 
                     T &operator *() {
@@ -60,15 +60,14 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(list_node<T> *_curr = nullptr, bool _forward = true) : curr(_curr), forward(_forward) {}
+                    Iterator(list_node<T> *_curr = nullptr) : curr(_curr) {}
 
                 private:
                     void advance() {
-                        curr = (forward)? curr->next : curr->prev;
+                        curr = curr->next;
                     }
 
                     list_node<T> *curr;
-                    bool forward;
 
                     friend class List<T>;
             };
@@ -81,16 +80,6 @@ namespace TinySTL {
             // iterator to the end
             Iterator end() {
                 return Iterator(nullptr);
-            }
-
-            // reverse iterator to the beginning
-            Iterator rbegin() {
-                return Iterator(tail, false);
-            }
-
-            // reverse iterator to the end
-            Iterator rend() {
-                return Iterator(nullptr, false);
             }
 
             /*** 3. Capacity ***/
@@ -178,15 +167,16 @@ namespace TinySTL {
                     return pos;
                 if (pos == this->begin()) {
                     pop_front();
-                } else {
+                    return this->begin();
+                }  else {
                     list_node<T> *pivot = pos.curr;
                     pivot->prev->next = pivot->next;
                     pivot->next->prev = pivot->prev;
                     pos = Iterator(pivot->next);
                     delete pivot;
                     --N;
+                    return pos;
                 }
-                return pos;
             }
 
             // swap content with another list
