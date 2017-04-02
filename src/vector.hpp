@@ -32,7 +32,7 @@ namespace TinySTL {
             }
 
             /*** 2. Iterator ***/
-            class Iterator {
+            class Iterator : public ForwardIterator {
                 public:
                     bool operator ==(const Iterator &I) {
                         return (this->curr == I.curr);
@@ -47,23 +47,46 @@ namespace TinySTL {
                     }
 
                     Iterator operator ++() {
-                        advance();
-                        return Iterator(this->curr);
+                        return Iterator(++curr);
                     }
 
                     Iterator operator ++(int dummy) {
-                        Iterator temp(this->curr);
-                        advance();
-                        return temp;
+                        return Iterator(curr++);
                     }
 
                     Iterator(T *_curr = nullptr) : curr(_curr) {}
 
                 private:
-                    void advance() {
-                        ++curr;
+                    T *curr;
+
+                friend class Vector<T>;
+            };
+
+            class ReverseIterator : public BackwardIterator {
+                public:
+                    bool operator ==(const ReverseIterator &I) {
+                        return (this->curr == I.curr);
                     }
 
+                    bool operator !=(const ReverseIterator &I) {
+                        return (this->curr != I.curr);
+                    }
+
+                    T &operator *() {
+                        return *curr;
+                    }
+
+                    ReverseIterator operator ++() {
+                        return ReverseIterator(--curr);
+                    }
+
+                    ReverseIterator operator ++(int dummy) {
+                        return ReverseIterator(curr--);
+                    }
+
+                    ReverseIterator(T *_curr = nullptr) : curr(_curr) {}
+
+                private:
                     T *curr;
 
                 friend class Vector<T>;
@@ -77,6 +100,16 @@ namespace TinySTL {
             // iterator to the end
             Iterator end() {
                 return Iterator(this->empty()? nullptr : &(this->back()) + 1);
+            }
+
+            // reverse iterator to the beginning
+            ReverseIterator rbegin() {
+                return ReverseIterator(this->empty()? nullptr : &this->back());
+            }
+
+            // reverse iterator to the end
+            ReverseIterator rend() {
+                return ReverseIterator(this->empty()? nullptr : &(this->front()) - 1);
             }
 
             /*** 3. Capacity ***/
@@ -151,6 +184,13 @@ namespace TinySTL {
                 }
             }
 
+            // swap content with another vector
+            void swap(Vector<T> &other) {
+                Swap(this->data, other.data);
+                Swap(this->used, other.used);
+                Swap(this->capacity, other.capacity);
+            }
+
             // clear content
             void clear() {
                 delete data;
@@ -174,6 +214,7 @@ namespace TinySTL {
             unsigned int used, capacity;
 
         friend Iterator;
+        friend ReverseIterator;
     };
 };
 

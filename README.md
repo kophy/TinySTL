@@ -8,7 +8,7 @@
 ### STL Containers
 - [x] Array
 - [x] List
-- [ ] Vector
+- [x] Vector
 - [x] Stack
 - [x] Queue
 - [ ] PriorityQueue

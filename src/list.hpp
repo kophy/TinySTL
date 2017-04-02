@@ -2,7 +2,7 @@
 #define __TINYSTL_LIST__
 
 #include <stdexcept>
-#include <cassert>
+#include "utils.hpp"
 
 namespace TinySTL {
     template <typename T>
@@ -35,7 +35,7 @@ namespace TinySTL {
 
             /*** 2. Iterator ***/
 
-            class Iterator {
+            class Iterator : public ForwardIterator {
                 public:
                     bool operator ==(const Iterator &I) {
                         return (this->curr == I.curr);
@@ -69,7 +69,44 @@ namespace TinySTL {
 
                     list_node<T> *curr;
 
-                    friend class List<T>;
+                friend class List<T>;
+            };
+
+            class ReverseIterator : public BackwardIterator {
+                public:
+                    bool operator ==(const ReverseIterator &I) {
+                        return (this->curr == I.curr);
+                    }
+
+                    bool operator !=(const ReverseIterator &I) {
+                        return (this->curr != I.curr);
+                    }
+
+                    T &operator *() {
+                        return curr->val;
+                    }
+
+                    ReverseIterator operator ++() {
+                        advance();
+                        return ReverseIterator(this->curr);
+                    }
+
+                    ReverseIterator operator ++(int dummy) {
+                        ReverseIterator temp(this->curr);
+                        advance();
+                        return temp;
+                    }
+
+                    ReverseIterator(list_node<T> *_curr = nullptr) : curr(_curr) {}
+
+                private:
+                    void advance() {
+                        curr = curr->prev;
+                    }
+
+                    list_node<T> *curr;
+
+                friend class List<T>;
             };
 
             // iterator to the beginning
@@ -80,6 +117,16 @@ namespace TinySTL {
             // iterator to the end
             Iterator end() {
                 return Iterator(nullptr);
+            }
+
+            // reverse iterator to the beginning
+            ReverseIterator rbegin() {
+                return ReverseIterator(tail);
+            }
+
+            // reverse iterator to the end
+            ReverseIterator rend() {
+                return ReverseIterator(nullptr);
             }
 
             /*** 3. Capacity ***/
@@ -181,15 +228,9 @@ namespace TinySTL {
 
             // swap content with another list
             void swap(List<T> &other) {
-                auto temp_head = this->head;
-                this->head = other.head;
-                other.head = temp_head;
-                auto temp_tail = this->tail;
-                this->tail = other.tail;
-                other.tail = temp_tail;
-                unsigned int temp_N = this->N;
-                this->N = other.N;
-                other.N = temp_N;
+                Swap(this->head, other.head);
+                Swap(this->tail, other.tail);
+                Swap(this->N, other.N);
             }
 
             // clear content

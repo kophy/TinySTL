@@ -72,6 +72,32 @@ TEST_CASE("iterator") {
     }
 }
 
+TEST_CASE("reverse iterator") {
+    SECTION("read") {
+        Vector<int> v;
+        for (int i = 0; i < 5; ++i)
+            v.push_back(i);
+        int i = 5;
+        for (auto iter = v.rbegin(); iter != v.rend(); ++iter)
+            CHECK(*iter == --i);
+        CHECK(i == 0);
+    }
+
+    SECTION("write") {
+        Vector<int> v;
+        for (int i = 0; i < 5; ++i)
+            v.push_back(i);
+        for (auto iter = v.rbegin(); iter != v.rend(); ++iter)
+            *iter = (*iter) * 2;
+        int i = 5;
+        for (auto iter = v.rbegin(); iter != v.rend(); iter++) {
+            --i;
+            CHECK(*iter == i * 2);
+        }
+        CHECK(i == 0);
+    }
+}
+
 TEST_CASE("insert") {
     SECTION("front") {
         Vector<int> v;
@@ -126,5 +152,22 @@ TEST_CASE("erase") {
         iter = v.erase(iter);
         CHECK(*iter == 2);
         CHECK(v.size() == 4);
+    }
+}
+
+TEST_CASE("swap") {
+    SECTION("swap two vectors") {
+        Vector<int> v1, v2;
+        for (int i = 0; i < 5; ++i)
+            v1.push_back(1);
+        for (int j = 0; j < 3; ++j)
+            v2.push_back(2);
+        v1.swap(v2);
+        CHECK(v1.size() == 3);
+        for (int i = 0; i < 3; ++i)
+            CHECK(v1[i] == 2);
+        CHECK(v2.size() == 5);
+        for (int j = 0; j < 5; ++j)
+            CHECK(v2[j] == 1);
     }
 }

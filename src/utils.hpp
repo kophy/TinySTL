@@ -38,6 +38,17 @@ namespace TinySTL {
     T Max(const T &a, const T &b, bool (*cmp)(const T &a, const T &b) = Less<T>) {
         return cmp(a, b)? b : a;
     }
+
+    template <typename T>
+    void Swap(T &a, T &b) {
+        auto temp = a;
+        a = b;
+        b = temp;
+    }
+
+    /*** Iterator ***/
+    class ForwardIterator {};
+    class BackwardIterator {};
 };
 
 #endif
