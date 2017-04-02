@@ -260,6 +260,7 @@ namespace TinySTL {
             unsigned int N;
 
         friend class Iterator;
+        friend class ReverseIterator;
     };
 };
 

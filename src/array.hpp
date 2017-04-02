@@ -160,6 +160,7 @@ namespace TinySTL {
             T *data;
 
         friend class Iterator;
+        friend class ReverseIterator;
     };
 };
 

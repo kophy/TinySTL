@@ -213,8 +213,8 @@ namespace TinySTL {
             T *data;
             unsigned int used, capacity;
 
-        friend Iterator;
-        friend ReverseIterator;
+        friend class Iterator;
+        friend class ReverseIterator;
     };
 };
 
