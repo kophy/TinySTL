@@ -20,3 +20,6 @@ echo "testing stack..."
 
 echo "testing queue..."
 ./$BIN_DIR/test_queue
+
+echo "testing priority queue..."
+./$BIN_DIR/test_priority_queue
