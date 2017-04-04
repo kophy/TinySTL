@@ -202,7 +202,12 @@ namespace TinySTL {
             /*** Constructor and Destructor ***/
 
             // constructor
-            Vector() : data(nullptr), used(0), capacity(0) {}
+            Vector(unsigned int _size = 0) : data(nullptr), used(0), capacity(0) {
+                if (_size > 0) {
+                    this->resize(_size);
+                    used = _size;
+                }
+            }
 
             // destructor
             ~Vector() {

@@ -11,7 +11,7 @@
 - [x] Vector
 - [x] Stack
 - [x] Queue
-- [ ] PriorityQueue
+- [x] PriorityQueue
 - [ ] HashSet (unordered_set)
 - [ ] TreeSet (set)
 - [ ] HashMap (unordered_map)

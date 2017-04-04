@@ -1,6 +1,8 @@
 #ifndef __TINYSTL_UTILS__
 #define __TINYSTL_UTILS__
 
+#include <functional>
+
 namespace TinySTL {
 
     /*** Pair ***/
@@ -30,6 +32,11 @@ namespace TinySTL {
     }
 
     template <typename T>
+    bool Equal(const T &a, const T &b) {
+        return a == b;
+    }
+
+    template <typename T>
     T Min(const T &a, const T &b, bool (*cmp)(const T &a, const T &b) = Less<T>) {
         return cmp(a, b)? a : b;
     }
@@ -39,6 +46,11 @@ namespace TinySTL {
         return cmp(a, b)? b : a;
     }
 
+    /*** Iterator ***/
+    class ForwardIterator {};
+    class BackwardIterator {};
+
+    /*** Some basic algorithms ***/
     template <typename T>
     void Swap(T &a, T &b) {
         auto temp = a;
@@ -46,9 +58,28 @@ namespace TinySTL {
         b = temp;
     }
 
-    /*** Iterator ***/
-    class ForwardIterator {};
-    class BackwardIterator {};
+    // just a naive wrapper
+    template <typename T>
+    unsigned long Hash(const T &val) {
+        return std::hash<T>()(val);
+    }
+
+    template <typename T, typename Iterator>
+    Iterator Find(Iterator begin, Iterator end, const T &val, bool (*pred)(const T &a, const T &b) = Equal<T>) {
+        for (; begin != end; ++begin)
+            if (pred(*begin, val))
+                break;
+        return begin;
+    }
+
+    template <typename T, typename Iterator>
+    unsigned int Count(Iterator begin, Iterator end, const T &val, bool (*pred)(const T &a, const T &b) = Equal<T>) {
+        unsigned int count = 0;
+        for (; begin != end; ++begin)
+            if (pred(*begin, val))
+                ++count;
+        return count;
+    }
 };
 
 #endif
