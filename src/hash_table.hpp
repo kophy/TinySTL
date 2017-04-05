@@ -2,7 +2,6 @@
 #define __TINYSTL_HASH_TABLE__
 
 #include <iostream>
-#include <cassert>
 #include "vector.hpp"
 #include "list.hpp"
 #include "utils.hpp"
@@ -21,6 +20,78 @@ namespace TinySTL {
                 return entry_number;
             }
 
+            class Iterator : public ForwardIterator {
+                public:
+                    bool operator ==(const Iterator &I) {
+                        return (this->bucket_id == I.bucket_id && this->pos == I.pos);
+                    }
+
+                    bool operator !=(const Iterator &I) {
+                        return (this->bucket_id != I.bucket_id || this->pos != I.pos);
+                    }
+
+                    T &operator *() {
+                        return *pos;
+                    }
+
+                    Iterator operator ++() {
+                        advance();
+                        return *this;
+                    }
+
+                    Iterator operator ++(int dummy) {
+                        auto temp = *this;
+                        advance();
+                        return temp;
+                    }
+
+                    Iterator(Vector<List<T>> *_data = nullptr) {
+                        data = _data;
+                        bucket_id = 0;
+                    }
+
+                private:
+                    Vector<List<T>> *data;
+                    unsigned int bucket_id;
+                    typename List<T>::Iterator pos;
+
+                    void advance() {
+                        ++pos;
+                        while (pos == (*data)[bucket_id].end()) {
+                            ++bucket_id;
+                            if (bucket_id == (*data).size())
+                                break;
+                            pos = (*data)[bucket_id].begin();
+                        }
+                    }
+
+                friend class HashTable<T>;
+            };
+
+            // iterator to the beginning
+            Iterator begin() {
+                Iterator temp(data);
+                if (this->empty()) {
+                    temp.bucket_id = bucket_number - 1;
+                    temp.pos = (*data).back().end();
+                } else {
+                    int id = 0;
+                    while ((*data)[id].empty())
+                        ++id;
+                    temp.bucket_id = id;
+                    temp.pos = (*data)[id].begin();
+                }
+                return temp;
+            }
+
+            // iterator to the end
+            Iterator end() {
+                Iterator temp(data);
+                temp.bucket_id = bucket_number;
+                temp.pos = (*data).back().end();
+                return temp;
+            }
+
             // returns the number of elements matching specific key
             unsigned int count(const T &val) {
                 unsigned int id = this->hash(val) % bucket_number;
@@ -31,8 +102,9 @@ namespace TinySTL {
             void insert(const T &val) {
                 if (this->count(val) > 0)
                     return;
-                if (entry_number * 1.0 / bucket_number >= alpha)
+                if (entry_number * 1.0 / bucket_number >= alpha) {
                     rehash(2 * bucket_number);
+                }
                 unsigned int id = this->hash(val) % bucket_number;
                 (*data)[id].push_back(val);
                 ++entry_number;
@@ -85,6 +157,8 @@ namespace TinySTL {
                 data = temp;
                 bucket_number = new_bucket_number;
             }
+
+        friend class Iterator;
     };
 };
 

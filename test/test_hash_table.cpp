@@ -56,3 +56,20 @@ TEST_CASE("insert and erase") {
         CHECK(ht.size() == 5);
     }
 }
+
+TEST_CASE("iterator") {
+    SECTION("hash table of int") {
+        HashTable<int> ht;
+        Vector<int> data;
+        for (int i = 0; i < 10; ++i) {
+            ht.insert(i);
+            data.push_back(i);
+        }
+        int i = 0;
+        for (auto iter = ht.begin(); iter != ht.end(); ++iter) {
+            CHECK(Count(data.begin(), data.end(), *iter) == 1);
+            ++i;
+        }
+        CHECK(i == 10);
+    }
+}
