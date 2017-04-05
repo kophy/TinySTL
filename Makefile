@@ -22,7 +22,7 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: utils array list vector stack queue priority_queue
+tinystl_tests: utils array list vector stack queue priority_queue hash_table
 
 utils: $(TEST_DIR)/test_utils.cpp $(SRC_DIR)/utils.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_utils.cpp -o $(BIN_DIR)/test_utils.o
@@ -48,9 +48,13 @@ queue: $(TEST_DIR)/test_queue.cpp $(SRC_DIR)/queue.hpp $(SRC_DIR)/list.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_queue.cpp -o $(BIN_DIR)/test_queue.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_queue.o -o $(BIN_DIR)/test_queue
 
-priority_queue: $(TEST_DIR)/test_priority_queue.cpp $(SRC_DIR)/priority_queue.hpp $(SRC_DIR)/list.hpp
+priority_queue: $(TEST_DIR)/test_priority_queue.cpp $(SRC_DIR)/priority_queue.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_priority_queue.cpp -o $(BIN_DIR)/test_priority_queue.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_priority_queue.o -o $(BIN_DIR)/test_priority_queue
+
+hash_table: $(TEST_DIR)/test_hash_table.cpp $(SRC_DIR)/hash_table.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_hash_table.cpp -o $(BIN_DIR)/test_hash_table.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_hash_table.o -o $(BIN_DIR)/test_hash_table
 
 # run all tests
 .PHONY: test_all
@@ -61,7 +65,7 @@ test_all:
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_priority_queue
+	@./$(BIN_DIR)/test_hash_table
 
 .PHONY: clean
 clean:

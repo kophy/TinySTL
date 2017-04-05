@@ -160,10 +160,16 @@ namespace TinySTL {
             void pop_front() {
                 if (head == nullptr)
                     throw std::out_of_range("empty list");
-                auto temp = head;
-                head = head->next;
-                head->prev = nullptr;
-                delete temp;
+                if (N == 1) {
+                    delete head;
+                    head = nullptr;
+                    tail = nullptr;
+                } else {
+                    auto temp = head;
+                    head = head->next;
+                    head->prev = nullptr;
+                    delete temp;
+                }
                 --N;
             }
 
@@ -184,11 +190,17 @@ namespace TinySTL {
             void pop_back() {
                 if (tail == nullptr)
                     throw std::out_of_range("empty list");
-                auto temp = tail;
-                tail = tail->prev;
-                tail->next = nullptr;
-                delete temp;
-                --N;
+                if (N == 1) {
+                    delete head;
+                    head = nullptr;
+                    tail = nullptr;
+                } else {
+                    auto temp = tail;
+                    tail = tail->prev;
+                    tail->next = nullptr;
+                    delete temp;
+                    --N;
+                }
             }
 
             // insert elements

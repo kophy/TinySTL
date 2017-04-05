@@ -80,6 +80,21 @@ TEST_CASE("Find and Count") {
     }
 }
 
+TEST_CASE("Erase with Find") {
+    SECTION("List") {
+        List<int> l;
+        for (int i = 0; i < 5; ++i)
+            l.push_back(i);
+        auto iter = Find(l.begin(), l.end(), 1);
+        l.erase(iter);
+        int data[] = {0, 2, 3, 4};
+        int i = 0;
+        for (auto iter = l.begin(); iter != l.end(); ++iter)
+            CHECK(*iter == data[i++]);
+        CHECK(i == 4);
+    }
+}
+
 TEST_CASE("Hash") {
     SECTION("int") {
         std::hash<int> h;
