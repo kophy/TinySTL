@@ -193,10 +193,7 @@ namespace TinySTL {
 
             // clear content
             void clear() {
-                delete data;
-                data = nullptr;
                 used = 0;
-                capacity = 0;
             }
 
             /*** Constructor and Destructor ***/
@@ -211,7 +208,7 @@ namespace TinySTL {
 
             // destructor
             ~Vector() {
-                clear();
+                delete [] data;
             }
 
         private:

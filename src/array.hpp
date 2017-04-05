@@ -153,7 +153,7 @@ namespace TinySTL {
 
             // destructor
             ~Array() {
-                delete data;
+                delete [] data;
             }
 
         private:
