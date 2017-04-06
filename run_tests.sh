@@ -26,3 +26,6 @@ echo "testing priority queue..."
 
 echo "testing hash table..."
 ./$BIN_DIR/test_hash_table
+
+echo "testing hash set..."
+./$BIN_DIR/test_hash_set

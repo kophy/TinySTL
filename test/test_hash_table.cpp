@@ -57,23 +57,6 @@ TEST_CASE("insert and erase") {
     }
 }
 
-TEST_CASE("iterator") {
-    SECTION("hash table of int") {
-        HashTable<int> ht;
-        Vector<int> data;
-        for (int i = 0; i < 10; ++i) {
-            ht.insert(i);
-            data.push_back(i);
-        }
-        int i = 0;
-        for (auto iter = ht.begin(); iter != ht.end(); ++iter) {
-            CHECK(Count(data.begin(), data.end(), *iter) == 1);
-            ++i;
-        }
-        CHECK(i == 10);
-    }
-}
-
 TEST_CASE("clear") {
     SECTION("insert, clear and insert") {
         HashTable<int> ht;
@@ -84,21 +67,5 @@ TEST_CASE("clear") {
         for (int i = 0; i < 5; ++i)
             ht.insert(i);
         CHECK(ht.size() == 5);
-    }
-}
-
-TEST_CASE("find") {
-    HashTable<int> ht;
-    for (int i = 0; i < 5; ++i)
-        ht.insert(i);
-
-    SECTION("element in hash table") {
-        auto iter = ht.find(3);
-        CHECK(*iter == 3);
-    }
-
-    SECTION("element not in hash table") {
-        auto iter = ht.find(7);
-        CHECK(iter == ht.end());
     }
 }

@@ -20,96 +20,10 @@ namespace TinySTL {
                 return entry_number;
             }
 
-            class Iterator : public ForwardIterator {
-                public:
-                    bool operator ==(const Iterator &I) {
-                        return (this->bucket_id == I.bucket_id && this->pos == I.pos);
-                    }
-
-                    bool operator !=(const Iterator &I) {
-                        return (this->bucket_id != I.bucket_id || this->pos != I.pos);
-                    }
-
-                    T &operator *() {
-                        return *pos;
-                    }
-
-                    Iterator operator ++() {
-                        advance();
-                        return *this;
-                    }
-
-                    Iterator operator ++(int dummy) {
-                        auto temp = *this;
-                        advance();
-                        return temp;
-                    }
-
-                    Iterator(Vector<List<T>> *_data = nullptr) {
-                        data = _data;
-                        bucket_id = 0;
-                    }
-
-                private:
-                    Vector<List<T>> *data;
-                    unsigned int bucket_id;
-                    typename List<T>::Iterator pos;
-
-                    void advance() {
-                        ++pos;
-                        while (pos == (*data)[bucket_id].end()) {
-                            ++bucket_id;
-                            if (bucket_id == (*data).size())
-                                break;
-                            pos = (*data)[bucket_id].begin();
-                        }
-                    }
-
-                friend class HashTable<T>;
-            };
-
-            // iterator to the beginning
-            Iterator begin() {
-                Iterator temp(data);
-                if (this->empty()) {
-                    temp.bucket_id = bucket_number - 1;
-                    temp.pos = (*data).back().end();
-                } else {
-                    int id = 0;
-                    while ((*data)[id].empty())
-                        ++id;
-                    temp.bucket_id = id;
-                    temp.pos = (*data)[id].begin();
-                }
-                return temp;
-            }
-
-            // iterator to the end
-            Iterator end() {
-                Iterator temp(data);
-                temp.bucket_id = bucket_number;
-                temp.pos = (*data).back().end();
-                return temp;
-            }
-
             // returns the number of elements matching specific key
             unsigned int count(const T &val) {
                 unsigned int id = this->hash(val) % bucket_number;
                 return Count((*data)[id].begin(), (*data)[id].end(), val, pred);
-            }
-
-            // iterator to element with specific key
-            Iterator find(const T &val) {
-                unsigned int id = this->hash(val) % bucket_number;
-                Iterator temp;
-                temp.bucket_id = id;
-                for (auto iter = (*data)[id].begin(); iter != (*data)[id].end(); ++iter) {
-                    if (pred(*iter, val)) {
-                        temp.pos = iter;
-                        return temp;
-                    }
-                }
-                return this->end();
             }
 
             // inserts elements
@@ -142,8 +56,8 @@ namespace TinySTL {
             }
 
             HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>,
-                    unsigned long (*_hash)(const T &val) = Hash<T>,
-                    double _alpha = 1.0){
+                      unsigned long (*_hash)(const T &val) = Hash<T>,
+                      double _alpha = 1.0){
                 alpha = _alpha;
                 hash = _hash;
                 pred = _pred;
@@ -157,7 +71,7 @@ namespace TinySTL {
                 delete data;
             }
 
-        private:
+        protected:
             Vector<List<T>> *data;
             unsigned int bucket_number, entry_number;
             double alpha;    // congestion control
@@ -178,9 +92,6 @@ namespace TinySTL {
                 data = temp;
                 bucket_number = new_bucket_number;
             }
-
-        friend class Iterator;
-        friend class ConstIterator;
     };
 };
 
