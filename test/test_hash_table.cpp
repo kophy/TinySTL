@@ -73,3 +73,32 @@ TEST_CASE("iterator") {
         CHECK(i == 10);
     }
 }
+
+TEST_CASE("clear") {
+    SECTION("insert, clear and insert") {
+        HashTable<int> ht;
+        for (int i = 0; i < 5; ++i)
+            ht.insert(i);
+        ht.clear();
+        CHECK(ht.empty());
+        for (int i = 0; i < 5; ++i)
+            ht.insert(i);
+        CHECK(ht.size() == 5);
+    }
+}
+
+TEST_CASE("find") {
+    HashTable<int> ht;
+    for (int i = 0; i < 5; ++i)
+        ht.insert(i);
+
+    SECTION("element in hash table") {
+        auto iter = ht.find(3);
+        CHECK(*iter == 3);
+    }
+
+    SECTION("element not in hash table") {
+        auto iter = ht.find(7);
+        CHECK(iter == ht.end());
+    }
+}

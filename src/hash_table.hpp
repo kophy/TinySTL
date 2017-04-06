@@ -98,6 +98,20 @@ namespace TinySTL {
                 return Count((*data)[id].begin(), (*data)[id].end(), val, pred);
             }
 
+            // iterator to element with specific key
+            Iterator find(const T &val) {
+                unsigned int id = this->hash(val) % bucket_number;
+                Iterator temp;
+                temp.bucket_id = id;
+                for (auto iter = (*data)[id].begin(); iter != (*data)[id].end(); ++iter) {
+                    if (pred(*iter, val)) {
+                        temp.pos = iter;
+                        return temp;
+                    }
+                }
+                return this->end();
+            }
+
             // inserts elements
             void insert(const T &val) {
                 if (this->count(val) > 0)
@@ -118,6 +132,13 @@ namespace TinySTL {
                 auto iter = Find((*data)[id].begin(), (*data)[id].end(), val, pred);
                 (*data)[id].erase(iter);
                 --entry_number;
+            }
+
+            // clear content
+            void clear() {
+                for (int i = 0; i < bucket_number; ++i)
+                    (*data)[i].clear();
+                entry_number = 0;
             }
 
             HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>,
@@ -159,6 +180,7 @@ namespace TinySTL {
             }
 
         friend class Iterator;
+        friend class ConstIterator;
     };
 };
 
