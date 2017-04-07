@@ -32,3 +32,6 @@ echo "testing hash set..."
 
 echo "testing hash map..."
 ./$BIN_DIR/test_hash_map
+
+echo "testing bitset..."
+./$BIN_DIR/test_bitset
