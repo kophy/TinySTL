@@ -29,3 +29,6 @@ echo "testing hash table..."
 
 echo "testing hash set..."
 ./$BIN_DIR/test_hash_set
+
+echo "testing hash map..."
+./$BIN_DIR/test_hash_map

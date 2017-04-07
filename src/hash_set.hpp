@@ -94,10 +94,11 @@ namespace TinySTL {
                 return this->end();
             }
 
-
+            // constructor
             HashSet(bool (*_pred)(const T &a, const T &b) = Equal<T>,
                     unsigned long (*_hash)(const T &val) = Hash<T>,
-                    double _alpha = 1.0) : HashTable<T>::HashTable(_pred, _hash, _alpha) {}
+                    double _alpha = 1.0) :
+                    HashTable<T>::HashTable(_pred, _hash, _alpha) {}
 
         friend class Iterator;
     };

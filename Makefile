@@ -22,7 +22,7 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: utils array list vector stack queue priority_queue hash_table hash_set
+tinystl_tests: utils array list vector stack queue priority_queue hash_table hash_set hash_map
 
 utils: $(TEST_DIR)/test_utils.cpp $(SRC_DIR)/utils.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_utils.cpp -o $(BIN_DIR)/test_utils.o
@@ -60,6 +60,10 @@ hash_set: $(TEST_DIR)/test_hash_set.cpp $(SRC_DIR)/hash_set.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_hash_set.cpp -o $(BIN_DIR)/test_hash_set.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_hash_set.o -o $(BIN_DIR)/test_hash_set
 
+hash_map: $(TEST_DIR)/test_hash_map.cpp $(SRC_DIR)/hash_map.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_hash_map.cpp -o $(BIN_DIR)/test_hash_map.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_hash_map.o -o $(BIN_DIR)/test_hash_map
+
 # run all tests
 .PHONY: test_all
 test_all:
@@ -69,7 +73,7 @@ test_all:
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_hash_set
+	@./$(BIN_DIR)/test_hash_map
 
 .PHONY: clean
 clean:

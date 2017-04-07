@@ -14,7 +14,7 @@
 - [x] PriorityQueue
 - [x] HashSet (unordered_set)
 - [ ] TreeSet (set)
-- [ ] HashMap (unordered_map)
+- [x] HashMap (unordered_map)
 - [ ] TreeMap (map)
 - [ ] Bitset
 
