@@ -5,18 +5,23 @@
 
 ## Content
 
-### STL Containers
+**STL Containers**
 - [x] Array
 - [x] List
 - [x] Vector
 - [x] Stack
 - [x] Queue
 - [x] PriorityQueue
-- [ ] HashSet (unordered_set)
+- [x] HashSet (unordered_set)
 - [ ] TreeSet (set)
 - [ ] HashMap (unordered_map)
 - [ ] TreeMap (map)
 - [ ] Bitset
 
-### Not STL Containers
+**Not STL Containers**
 - [ ] Graph
+- [ ] Matrix
+
+## TODO
+1. add allocator
+2. add more test cases
