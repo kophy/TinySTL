@@ -16,7 +16,7 @@
 - [ ] TreeSet (set)
 - [x] HashMap (unordered_map)
 - [ ] TreeMap (map)
-- [ ] Bitset
+- [x] Bitset
 
 **Not STL Containers**
 - [ ] Graph
