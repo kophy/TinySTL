@@ -54,6 +54,10 @@ TEST_CASE("insert and erase") {
         for (int i = 0; i < 10; ++i)
             ht.insert(MakePair(i / 2, i));
         CHECK(ht.size() == 5);
+        for (int i = 0; i < 5; ++i)
+            CHECK(ht.count(MakePair(i, 0)) == 1);
+        ht.erase(MakePair(3, 0));
+        CHECK(ht.count(MakePair(3, 0)) == 0);
     }
 }
 

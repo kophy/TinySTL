@@ -22,7 +22,7 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: utils array list vector stack queue priority_queue hash_table hash_set hash_map bitset
+tinystl_tests: utils array list vector stack queue priority_queue hash_table hash_set hash_map bitset tree
 
 utils: $(TEST_DIR)/test_utils.cpp $(SRC_DIR)/utils.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_utils.cpp -o $(BIN_DIR)/test_utils.o
@@ -68,6 +68,10 @@ bitset: $(TEST_DIR)/test_bitset.cpp $(SRC_DIR)/bitset.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_bitset.cpp -o $(BIN_DIR)/test_bitset.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_bitset.o -o $(BIN_DIR)/test_bitset
 
+tree: $(TEST_DIR)/test_tree.cpp $(SRC_DIR)/tree.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_tree.cpp -o $(BIN_DIR)/test_tree.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_tree.o -o $(BIN_DIR)/test_tree
+
 # run all tests
 .PHONY: test_all
 test_all:
@@ -77,7 +81,7 @@ test_all:
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_bitset
+	@./$(BIN_DIR)/test_tree
 
 .PHONY: clean
 clean:

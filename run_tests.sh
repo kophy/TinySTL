@@ -33,5 +33,8 @@ echo "testing hash set..."
 echo "testing hash map..."
 ./$BIN_DIR/test_hash_map
 
+echo "testing tree..."
+./$BIN_DIR/test_tree
+
 echo "testing bitset..."
 ./$BIN_DIR/test_bitset

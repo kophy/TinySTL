@@ -57,7 +57,7 @@ namespace TinySTL {
 
             HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>,
                       unsigned long (*_hash)(const T &val) = Hash<T>,
-                      double _alpha = 1.0){
+                      double _alpha = 1.0) {
                 alpha = _alpha;
                 hash = _hash;
                 pred = _pred;
