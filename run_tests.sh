@@ -3,6 +3,9 @@
 BIN_DIR="bin"
 chmod +x $BIN_DIR/*
 
+echo "testing allocator..."
+./$BIN_DIR/test_allocator
+
 echo "testing utils..."
 ./$BIN_DIR/test_utils
 

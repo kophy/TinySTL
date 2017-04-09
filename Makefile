@@ -22,7 +22,11 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: utils array list vector stack queue priority_queue hash_table hash_set hash_map bitset tree tree_set
+tinystl_tests: allocator utils array list vector stack queue priority_queue hash_table hash_set hash_map bitset tree tree_set
+
+allocator: $(TEST_DIR)/test_allocator.cpp $(SRC_DIR)/allocator.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_allocator.cpp -o $(BIN_DIR)/test_allocator.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_allocator.o -o $(BIN_DIR)/test_allocator
 
 utils: $(TEST_DIR)/test_utils.cpp $(SRC_DIR)/utils.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_utils.cpp -o $(BIN_DIR)/test_utils.o
@@ -85,7 +89,7 @@ test_all:
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_tree_set
+	@./$(BIN_DIR)/test_allocator
 
 .PHONY: clean
 clean:
