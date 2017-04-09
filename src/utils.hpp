@@ -12,7 +12,8 @@ namespace TinySTL {
         N second;
 
         Pair() {}
-        Pair(const M &_first, const N &_second) : first(_first), second(_second) {}
+
+        Pair(M _first, N _second) : first(_first), second(_second) {}
     };
 
     template <typename M, typename N>

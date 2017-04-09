@@ -2,10 +2,11 @@
 #define __TINYSTL_VECTOR__
 
 #include <stdexcept>
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T>
+    template <typename T, class Alloc = Allocator<T>>
     class Vector {
         public:
             /*** 1. Element Access ***/
@@ -88,6 +89,7 @@ namespace TinySTL {
 
                 private:
                     T *curr;
+                    Alloc alloc;
 
                 friend class Vector<T>;
             };
@@ -131,13 +133,18 @@ namespace TinySTL {
 
             // change size to given value
             void resize(unsigned int new_capacity) {
-                T *temp = new T[new_capacity];
-                capacity = new_capacity;
-                used = Min(used, new_capacity);
-                for (int i = 0; i < used; ++i)
+                T *temp = alloc.allocate(new_capacity);
+                unsigned int new_used = Min(used, new_capacity);
+                alloc.construct(temp, new_used);
+                for (int i = 0; i < new_used; ++i)
                     temp[i] = data[i];
-                delete data;
+                if (data != nullptr) {
+                    alloc.destroy(data, used);
+                    alloc.deallocate(data);
+                }
                 data = temp;
+                used = new_used;
+                capacity = new_capacity;
             }
 
             /*** Modifiers ***/
@@ -146,12 +153,15 @@ namespace TinySTL {
             void push_back(const T &val) {
                 if (used >= capacity)
                     this->resize(Max(1u, 2 * capacity));
-                data[used++] = val;
+                alloc.construct(data + used, 1);
+                data[used] = val;
+                ++used;
             }
 
             // delete last element
             void pop_back() {
                 --used;
+                alloc.destroy(data + used, 1);
             }
 
             // insert elements
@@ -165,6 +175,7 @@ namespace TinySTL {
                     unsigned int pivot = pos.curr - data;
                     for (int i = used; i > pivot; --i)
                         data[i] = data[i - 1];
+                    alloc.construct(data + pivot, 1);
                     data[pivot] = val;
                     ++used;
                     return Iterator(data + pivot);
@@ -177,6 +188,7 @@ namespace TinySTL {
                     return pos;
                 } else {
                     unsigned int pivot = pos.curr - data;
+                    alloc.destroy(data + pivot, 1);
                     for (int i = pivot; i < used; ++i)
                         data[i] = data[i + 1];
                     --used;
@@ -193,6 +205,7 @@ namespace TinySTL {
 
             // clear content
             void clear() {
+                alloc.destroy(data, used);
                 used = 0;
             }
 
@@ -201,19 +214,23 @@ namespace TinySTL {
             // constructor
             Vector(unsigned int _size = 0) : data(nullptr), used(0), capacity(0) {
                 if (_size > 0) {
-                    this->resize(_size);
+                    data = alloc.allocate(_size);
+                    alloc.construct(data, _size);
                     used = _size;
+                    capacity = _size;
                 }
             }
 
             // destructor
             ~Vector() {
-                delete [] data;
+                clear();
+                alloc.deallocate(data);
             }
 
         private:
             T *data;
             unsigned int used, capacity;
+            Alloc alloc;
 
         friend class Iterator;
         friend class ReverseIterator;

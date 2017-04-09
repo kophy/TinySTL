@@ -90,10 +90,6 @@ TEST_CASE("iterator") {
         for (auto iter = l.begin(); iter != l.end(); ++iter)
             CHECK(*iter == data[cnt++]);
         CHECK(cnt == 5);
-        cnt = 0;
-        for (auto iter = l.begin(); iter != l.end(); iter++)
-            CHECK(*iter == data[cnt++]);
-        CHECK(cnt == 5);
     }
 
     SECTION("not empty list : edit") {
