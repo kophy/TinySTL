@@ -1,13 +1,13 @@
 #ifndef __TINYSTL_HASH_TABLE__
 #define __TINYSTL_HASH_TABLE__
 
-#include <iostream>
 #include "vector.hpp"
 #include "list.hpp"
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T>
+    template <typename T, class Alloc = Allocator<list_node<T>>>
     class HashTable {
         public:
             // checks whether the hash table is empty
@@ -62,7 +62,7 @@ namespace TinySTL {
                 hash = _hash;
                 pred = _pred;
 
-                data = new Vector<List<T>>(1);
+                data = new Vector<List<T, Alloc>>(1);
                 bucket_number = 1;
                 entry_number = 0;
             }
@@ -72,7 +72,7 @@ namespace TinySTL {
             }
 
         protected:
-            Vector<List<T>> *data;
+            Vector<List<T, Alloc>> *data;
             unsigned int bucket_number, entry_number;
             double alpha;    // congestion control
 
@@ -80,7 +80,7 @@ namespace TinySTL {
             bool (*pred)(const T &a, const T &b);
 
             void rehash(unsigned int new_bucket_number) {
-                Vector<List<T>> *temp = new Vector<List<T>>(new_bucket_number);
+                Vector<List<T, Alloc>> *temp = new Vector<List<T, Alloc>>(new_bucket_number);
                 for (int i = 0; i < data->size(); ++i) {
                     for (auto iter = (*data)[i].begin(); iter != (*data)[i].end(); ++iter) {
                         T val = *iter;

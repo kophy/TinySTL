@@ -2,11 +2,12 @@
 #define __TINYSTL_HASH_SET__
 
 #include "hash_table.hpp"
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T>
-    class HashSet : public HashTable<T> {
+    template <typename T, class Alloc = Allocator<list_node<T>>>
+    class HashSet : public HashTable<T, Alloc> {
         public:
             class Iterator : public ForwardIterator {
                 public:

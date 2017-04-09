@@ -6,7 +6,7 @@
 ## Content
 
 **STL Containers**
-- [ ] Allocator
+- [x] Allocator
 - [x] Array
 - [x] List
 - [x] Vector

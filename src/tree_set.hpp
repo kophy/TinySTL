@@ -2,11 +2,12 @@
 #define __TINYSTL_TREE_SET__
 
 #include "tree.hpp"
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T>
-    class TreeSet : public Tree<T> {
+    template <typename T, class Alloc = Allocator<tree_node<T>>>
+    class TreeSet : public Tree<T, Alloc> {
         public:
             class Iterator : public ForwardIterator {
                 public:

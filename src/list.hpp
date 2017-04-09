@@ -2,6 +2,7 @@
 #define __TINYSTL_LIST__
 
 #include <stdexcept>
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
@@ -13,7 +14,7 @@ namespace TinySTL {
         list_node(U _val) : val(_val), prev(nullptr), next(nullptr) {}
     };
 
-    template <typename T>
+    template <typename T, class Alloc = Allocator<list_node<T>>>
     class List {
         public:
             /*** 1. Element Access ***/
@@ -145,10 +146,10 @@ namespace TinySTL {
             // add element at beginning
             void push_front(const T &val) {
                 if (this->empty()) {
-                    head = new list_node<T>(val);
+                    head = alloc.allocate_and_construct(1, val);
                     tail = head;
                 } else {
-                    head->prev = new list_node<T>(val);
+                    head->prev = alloc.allocate_and_construct(1, val);
                     head->prev->next = head;
                     head = head->prev;
                 }
@@ -160,14 +161,14 @@ namespace TinySTL {
                 if (head == nullptr)
                     throw std::out_of_range("empty list");
                 if (N == 1) {
-                    delete head;
+                    alloc.destroy_and_deallocate(head, 1);
                     head = nullptr;
                     tail = nullptr;
                 } else {
                     auto temp = head;
                     head = head->next;
                     head->prev = nullptr;
-                    delete temp;
+                    alloc.destroy_and_deallocate(temp, 1);
                 }
                 --N;
             }
@@ -175,10 +176,10 @@ namespace TinySTL {
             // add element at end
             void push_back(const T &val) {
                 if (this->empty()) {
-                    head = new list_node<T>(val);
+                    head = alloc.allocate_and_construct(1, val);
                     tail = head;
                 } else {
-                    tail->next = new list_node<T>(val);
+                    tail->next = alloc.allocate_and_construct(1, val);
                     tail->next->prev = tail;
                     tail = tail->next;
                 }
@@ -190,14 +191,14 @@ namespace TinySTL {
                 if (tail == nullptr)
                     throw std::out_of_range("empty list");
                 if (N == 1) {
-                    delete head;
+                    alloc.destroy_and_deallocate(head, 1);
                     head = nullptr;
                     tail = nullptr;
                 } else {
                     auto temp = tail;
                     tail = tail->prev;
                     tail->next = nullptr;
-                    delete temp;
+                    alloc.destroy_and_deallocate(temp, 1);
                     --N;
                 }
             }
@@ -210,7 +211,7 @@ namespace TinySTL {
                     push_back(val);
                 } else {
                     list_node<T> *pivot = pos.curr;
-                    list_node<T> *new_node = new list_node<T>(val);
+                    list_node<T> *new_node = alloc.allocate_and_construct(1, val);
                     pivot->prev->next = new_node;
                     new_node->prev = pivot->prev;
                     new_node->next = pivot;
@@ -231,7 +232,7 @@ namespace TinySTL {
                     pivot->prev->next = pivot->next;
                     pivot->next->prev = pivot->prev;
                     pos = Iterator(pivot->next);
-                    delete pivot;
+                    alloc.destroy_and_deallocate(pivot, 1);
                     --N;
                     return pos;
                 }
@@ -248,7 +249,7 @@ namespace TinySTL {
             void clear() {
                 while (N > 0) {
                     auto rest = head->next;
-                    delete head;
+                    alloc.destroy_and_deallocate(head, 1);
                     head = rest;
                     --N;
                 }
@@ -269,6 +270,7 @@ namespace TinySTL {
         private:
             list_node<T> *head, *tail;
             unsigned int N;
+            Alloc alloc;
 
         friend class Iterator;
         friend class ReverseIterator;

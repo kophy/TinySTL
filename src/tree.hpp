@@ -1,6 +1,7 @@
 #ifndef __TINYSTL_TREE__
 #define __TINYSTL_TREE__
 
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
@@ -12,7 +13,7 @@ namespace TinySTL {
         tree_node(U _val) : val(_val), left(nullptr), right(nullptr), parent(nullptr) {}
     };
 
-    template <typename T>
+    template <typename T, class Alloc = Allocator<tree_node<T>>>
     class Tree {
         public:
             // checks whether the tree is empty
@@ -59,6 +60,7 @@ namespace TinySTL {
         protected:
             tree_node<T> *root;
             unsigned int node_number;
+            Alloc alloc;
             bool (*cmp)(const T &a, const T &b);
 
             unsigned int count(tree_node<T> *curr, const T &val) {
@@ -76,7 +78,8 @@ namespace TinySTL {
             void insert(tree_node<T> *curr, const T &val) {
                 if (count(root, val) > 0)
                     return;
-                tree_node<T> *new_node = new tree_node<T>(val);
+                tree_node<T> *new_node = alloc.allocate_and_construct(1, val);
+
                 ++this->node_number;
                 while (curr != nullptr) {
                     new_node->parent = curr;
@@ -113,7 +116,7 @@ namespace TinySTL {
                         curr->parent->left = dummy;
                     else
                         curr->parent->right = dummy;
-                    delete curr;
+                    alloc.destroy_and_deallocate(curr, 1);
                 } else {
                     tree_node<T> *dummy = curr->left;
                     while (dummy->right != nullptr)
@@ -123,7 +126,7 @@ namespace TinySTL {
                     else
                         dummy->parent->right = nullptr;
                     curr->val = dummy->val;
-                    delete dummy;
+                    alloc.destroy_and_deallocate(dummy, 1);
                 }
             }
 
@@ -132,7 +135,7 @@ namespace TinySTL {
                     return;
                 clear(curr->left);
                 clear(curr->right);
-                delete curr;
+                alloc.destroy_and_deallocate(curr, 1);
                 --node_number;
             }
     };

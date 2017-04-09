@@ -2,6 +2,7 @@
 #define __TINYSTL_HASH_MAP__
 
 #include "hash_table.hpp"
+#include "allocator.hpp"
 #include "utils.hpp"
 
 namespace TinySTL {
@@ -15,8 +16,8 @@ namespace TinySTL {
         return Hash<Key>(a.first);
     }
 
-    template <typename Key, typename Value>
-    class HashMap : public HashTable< Pair<const Key, Value> > {
+    template <typename Key, typename Value, class Alloc = Allocator<list_node<Pair<const Key, Value>>>>
+    class HashMap : public HashTable<Pair<const Key, Value>, Alloc> {
         public:
 
             class Iterator : public ForwardIterator {

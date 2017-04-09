@@ -16,7 +16,7 @@ namespace TinySTL {
             }
 
             template <class ...Args>
-            void construct(T *p, unsigned int n, Args&&... args) {
+            void construct(T *p, unsigned int n, Args... args) {
                 for (int i = 0; i < n; ++i)
                     new (p + i) T(args...);    // pack expansion
             }
