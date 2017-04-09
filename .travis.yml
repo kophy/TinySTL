@@ -1,14 +1,11 @@
-language: cpp
-compiler:
-  - g++
+langauge: cpp
+sudo: required
+dist: trusty
 
-before_install:
-- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-- sudo apt-get update -qq
-
-install:
-- sudo apt-get install -qq g++-5
-- export CXX="g++-5"
+addons:
+  apt:
+    packages:
+      - libusb-1.0-0-dev
 
 # Change this to your needs
 script: make && make test_all
