@@ -1,5 +1,11 @@
 language: cpp
 compiler:
   - g++
+
+addons:
+  apt:
+    packages:
+    - g++-5.4
+
 # Change this to your needs
 script: make && make test_all
