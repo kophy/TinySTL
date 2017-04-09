@@ -4,8 +4,11 @@ compiler:
 
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
     packages:
-    - g++-5.4
+    - gcc-5
+    - g++-5
 
 # Change this to your needs
 script: make && make test_all
