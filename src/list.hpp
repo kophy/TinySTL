@@ -5,18 +5,17 @@
 #include "utils.hpp"
 
 namespace TinySTL {
+    template <typename U>
+    struct list_node {
+        U val;
+        list_node *prev, *next;
+
+        list_node(U _val) : val(_val), prev(nullptr), next(nullptr) {}
+    };
+
     template <typename T>
     class List {
         public:
-            /*** 0. Meta Defintion ***/
-            template <typename U>
-            struct list_node {
-                U val;
-                list_node *prev, *next;
-
-                list_node(U _val) : val(_val), prev(nullptr), next(nullptr) {}
-            };
-
             /*** 1. Element Access ***/
 
             // access first element

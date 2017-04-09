@@ -4,17 +4,17 @@
 #include "utils.hpp"
 
 namespace TinySTL {
+    template <typename U>
+    struct tree_node {
+        U val;
+        tree_node *left, *right, *parent;
+
+        tree_node(U _val) : val(_val), left(nullptr), right(nullptr), parent(nullptr) {}
+    };
+
     template <typename T>
     class Tree {
         public:
-            template <typename U>
-            struct tree_node {
-                U val;
-                tree_node *left, *right, *parent;
-
-                tree_node(U _val) : val(_val), left(nullptr), right(nullptr), parent(nullptr) {}
-            };
-
             // checks whether the tree is empty
             bool empty() {
                 return (node_number == 0);
@@ -56,7 +56,7 @@ namespace TinySTL {
                 clear();
             }
 
-        private:
+        protected:
             tree_node<T> *root;
             unsigned int node_number;
             bool (*cmp)(const T &a, const T &b);
