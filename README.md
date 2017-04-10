@@ -16,7 +16,7 @@
 - [x] HashSet (unordered_set)
 - [x] TreeSet (set)
 - [x] HashMap (unordered_map)
-- [ ] TreeMap (map)
+- [x] TreeMap (map)
 - [x] Bitset
 
 **Not STL Containers**
@@ -25,6 +25,6 @@
 
 ## TODO
 - ~~add allocator~~
-- rewrite allocation granularity *(from xx_node<T> to just T)*
+- ~~rewrite allocation granularity *(from xx_node<T> to just T)*~~
 - improve code style
 - add more test cases

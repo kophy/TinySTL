@@ -140,7 +140,7 @@ namespace TinySTL {
             HashMap(bool (*_pred)(const Pair<const Key, Value> &a, const Pair<const Key, Value> &b) = isEqualKey<Key, Value>,
                     unsigned long (*_hash)(const Pair<const Key, Value> &val) = hashByKey<Key, Value>,
                     double _alpha = 1.0) :
-                    HashTable<Pair<const Key, Value>>::HashTable(_pred, _hash, _alpha) {}
+                    HashTable<Pair<const Key, Value>, Alloc>::HashTable(_pred, _hash, _alpha) {}
 
         friend class Iterator;
     };

@@ -22,7 +22,7 @@ catch:
 	fi
 
 .PHONY: tinystl_tests
-tinystl_tests: allocator utils array list vector stack queue priority_queue hash_table hash_set hash_map bitset tree tree_set
+tinystl_tests: allocator utils array list vector stack queue priority_queue hash_table hash_set hash_map tree tree_set tree_map bitset
 
 allocator: $(TEST_DIR)/test_allocator.cpp $(SRC_DIR)/allocator.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_allocator.cpp -o $(BIN_DIR)/test_allocator.o
@@ -76,6 +76,10 @@ tree_set: $(TEST_DIR)/test_tree_set.cpp $(SRC_DIR)/tree_set.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_tree_set.cpp -o $(BIN_DIR)/test_tree_set.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_tree_set.o -o $(BIN_DIR)/test_tree_set
 
+tree_map: $(TEST_DIR)/test_tree_map.cpp $(SRC_DIR)/tree_map.hpp
+	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_tree_map.cpp -o $(BIN_DIR)/test_tree_map.o
+	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_tree_map.o -o $(BIN_DIR)/test_tree_map
+
 bitset: $(TEST_DIR)/test_bitset.cpp $(SRC_DIR)/bitset.hpp
 	g++ $(CXXFLAGS) -I $(LIB_DIR) -I $(SRC_DIR) -c $(TEST_DIR)/test_bitset.cpp -o $(BIN_DIR)/test_bitset.o
 	g++ $(BIN_DIR)/test_main.o $(BIN_DIR)/test_bitset.o -o $(BIN_DIR)/test_bitset
@@ -89,7 +93,7 @@ test_all:
 .PHONY: test
 test:
 	@chmod +x $(BIN_DIR)/*
-	@./$(BIN_DIR)/test_allocator
+	@./$(BIN_DIR)/test_tree_map
 
 .PHONY: clean
 clean:

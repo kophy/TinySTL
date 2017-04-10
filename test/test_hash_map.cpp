@@ -44,8 +44,8 @@ TEST_CASE("iterator") {
     SECTION("read with *") {
         int i = 0;
         for (auto iter = m.begin(); iter != m.end(); ++iter) {
-            CHECK((*iter).first == i);
-            CHECK((*iter).second == data[i]);
+            int j = (*iter).first;
+            CHECK((*iter).second == data[j]);
             ++i;
         }
         CHECK(i == 5);
@@ -56,8 +56,8 @@ TEST_CASE("iterator") {
             (*iter).second = (*iter).second * 2;
         int i = 0;
         for (auto iter = m.begin(); iter != m.end(); ++iter) {
-            CHECK((*iter).first == i);
-            CHECK((*iter).second == data[i] * 2);
+            int j = (*iter).first;
+            CHECK((*iter).second == data[j] * 2);
             ++i;
         }
         CHECK(i == 5);
@@ -66,8 +66,8 @@ TEST_CASE("iterator") {
     SECTION("read with ->") {
         int i = 0;
         for (auto iter = m.begin(); iter != m.end(); ++iter) {
-            CHECK(iter->first == i);
-            CHECK(iter->second == data[i]);
+            int j = iter->first;
+            CHECK(iter->second == data[j]);
             ++i;
         }
         CHECK(i == 5);
@@ -78,8 +78,8 @@ TEST_CASE("iterator") {
             iter->second = iter->second * 2;
         int i = 0;
         for (auto iter = m.begin(); iter != m.end(); ++iter) {
-            CHECK(iter->first == i);
-            CHECK(iter->second == data[i] * 2);
+            int j = iter->first;
+            CHECK(iter->second == data[j] * 2);
             ++i;
         }
         CHECK(i == 5);

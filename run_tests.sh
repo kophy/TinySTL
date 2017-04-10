@@ -42,5 +42,8 @@ echo "testing tree..."
 echo "testing tree set..."
 ./$BIN_DIR/test_tree_set
 
+echo "testing tree map..."
+./$BIN_DIR/test_tree_map
+
 echo "testing bitset..."
 ./$BIN_DIR/test_bitset
