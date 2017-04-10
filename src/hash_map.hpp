@@ -16,7 +16,7 @@ namespace TinySTL {
         return Hash<Key>(a.first);
     }
 
-    template <typename Key, typename Value, class Alloc = Allocator<list_node<Pair<const Key, Value>>>>
+    template <typename Key, typename Value, class Alloc = Allocator<Pair<const Key, Value>>>
     class HashMap : public HashTable<Pair<const Key, Value>, Alloc> {
         public:
 

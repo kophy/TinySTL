@@ -24,5 +24,7 @@
 - [ ] Matrix
 
 ## TODO
-1. add allocator
-2. add more test cases
+- ~~add allocator~~
+- rewrite allocation granularity *(from xx_node<T> to just T)*
+- improve code style
+- add more test cases

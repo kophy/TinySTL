@@ -6,7 +6,7 @@
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T, class Alloc = Allocator<list_node<T>>>
+    template <typename T, class Alloc = Allocator<T>>
     class HashSet : public HashTable<T, Alloc> {
         public:
             class Iterator : public ForwardIterator {

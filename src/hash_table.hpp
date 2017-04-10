@@ -7,7 +7,7 @@
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T, class Alloc = Allocator<list_node<T>>>
+    template <typename T, class Alloc = Allocator<T>>
     class HashTable {
         public:
             // checks whether the hash table is empty

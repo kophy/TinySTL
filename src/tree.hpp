@@ -7,13 +7,18 @@
 namespace TinySTL {
     template <typename U>
     struct tree_node {
-        U val;
+        U *pval;
         tree_node *left, *right, *parent;
 
-        tree_node(U _val) : val(_val), left(nullptr), right(nullptr), parent(nullptr) {}
+        tree_node() {
+            pval = nullptr;
+            left = nullptr;
+            right = nullptr;
+            parent = nullptr;
+        }
     };
 
-    template <typename T, class Alloc = Allocator<tree_node<T>>>
+    template <typename T, class Alloc = Allocator<T>>
     class Tree {
         public:
             // checks whether the tree is empty
@@ -28,7 +33,9 @@ namespace TinySTL {
 
             // returns the number of elements matching specific key
             unsigned int count(const T &val) {
-                return count(root, val);
+                unsigned int cnt = 0;
+                count_helper(cnt, root, val);
+                return cnt;
             }
 
             // insert elements
@@ -63,47 +70,49 @@ namespace TinySTL {
             Alloc alloc;
             bool (*cmp)(const T &a, const T &b);
 
-            unsigned int count(tree_node<T> *curr, const T &val) {
-                while (curr != nullptr) {
-                    if (cmp(val, curr->val))
-                        curr = curr->left;
-                    else if (cmp(curr->val, val))
-                        curr = curr->right;
-                    else
-                        return 1;
+            void count_helper(unsigned int &cnt, tree_node<T> *curr, const T &val) {
+                if (curr == nullptr)
+                    return;
+                if (cmp(val, *(curr->pval)))
+                    count_helper(cnt, curr->left, val);
+                else if (cmp(*(curr->pval), val))
+                    count_helper(cnt, curr->right, val);
+                else {
+                    ++cnt;
+                    count_helper(cnt, curr->left, val);
+                    count_helper(cnt, curr->right, val);
                 }
-                return 0;
             }
 
             void insert(tree_node<T> *curr, const T &val) {
-                if (count(root, val) > 0)
+                if (count(val) > 0)
                     return;
-                tree_node<T> *new_node = alloc.allocate_and_construct(1, val);
+                tree_node<T> *new_node = createNode(val);
 
                 ++this->node_number;
                 while (curr != nullptr) {
                     new_node->parent = curr;
-                    if (cmp(val, curr->val))
+                    if (cmp(val, *(curr->pval)))
                         curr = curr->left;
                     else
                         curr = curr->right;
                 }
                 if (new_node->parent == nullptr)
                     this->root = new_node;
-                else if (cmp(val, new_node->parent->val))
+                else if (cmp(val, *(new_node->parent->pval)))
                     new_node->parent->left = new_node;
                 else
                     new_node->parent->right = new_node;
             }
 
             void erase(tree_node<T> *curr, const T &val) {
-                if (count(root, val) == 0)
+                if (count(val) == 0)
                     return;
                 --this->node_number;
                 while (true) {
-                    if (cmp(val, curr->val))
+                    if (cmp(val, *(curr->pval)))
                         curr = curr->left;
-                    else if (cmp(curr->val, val))
+                    else if (cmp(*(curr->pval), val))
                         curr = curr->right;
                     else
                         break;
@@ -116,7 +125,7 @@ namespace TinySTL {
                         curr->parent->left = dummy;
                     else
                         curr->parent->right = dummy;
-                    alloc.destroy_and_deallocate(curr, 1);
+                    deleteNode(curr);
                 } else {
                     tree_node<T> *dummy = curr->left;
                     while (dummy->right != nullptr)
@@ -125,8 +134,8 @@ namespace TinySTL {
                         dummy->parent->left = nullptr;
                     else
                         dummy->parent->right = nullptr;
-                    curr->val = dummy->val;
-                    alloc.destroy_and_deallocate(dummy, 1);
+                    curr->pval = dummy->pval;
+                    deleteNode(dummy);
                 }
             }
 
@@ -135,8 +144,20 @@ namespace TinySTL {
                     return;
                 clear(curr->left);
                 clear(curr->right);
-                alloc.destroy_and_deallocate(curr, 1);
+                deleteNode(curr);
                 --node_number;
+            }
+
+            template <class ...Args>
+            tree_node<T> *createNode(Args... args) {
+                tree_node<T> *p = new tree_node<T>();
+                p->pval = alloc.allocate_and_construct(1, args...);
+                return p;
+            }
+
+            void deleteNode(tree_node<T> *p) {
+                alloc.destroy_and_deallocate(p->pval, 1);
+                delete p;
             }
     };
 };

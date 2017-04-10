@@ -8,13 +8,17 @@
 namespace TinySTL {
     template <typename U>
     struct list_node {
-        U val;
+        U *pval;
         list_node *prev, *next;
 
-        list_node(U _val) : val(_val), prev(nullptr), next(nullptr) {}
+        list_node() {
+            pval = nullptr;
+            prev = nullptr;
+            next = nullptr;
+        }
     };
 
-    template <typename T, class Alloc = Allocator<list_node<T>>>
+    template <typename T, class Alloc = Allocator<T>>
     class List {
         public:
             /*** 1. Element Access ***/
@@ -23,14 +27,14 @@ namespace TinySTL {
             T &front() {
                 if (head == nullptr)
                     throw std::out_of_range("empty list");
-                return head->val;
+                return *(head->pval);
             }
 
             // access last element
             T &back() {
                 if (tail == nullptr)
                     throw std::out_of_range("empty list");
-                return tail->val;
+                return *(tail->pval);
             }
 
             /*** 2. Iterator ***/
@@ -46,7 +50,7 @@ namespace TinySTL {
                     }
 
                     T &operator *() {
-                        return curr->val;
+                        return *(curr->pval);
                     }
 
                     Iterator operator ++() {
@@ -83,7 +87,7 @@ namespace TinySTL {
                     }
 
                     T &operator *() {
-                        return curr->val;
+                        return *(curr->pval);
                     }
 
                     ReverseIterator operator ++() {
@@ -146,10 +150,10 @@ namespace TinySTL {
             // add element at beginning
             void push_front(const T &val) {
                 if (this->empty()) {
-                    head = alloc.allocate_and_construct(1, val);
+                    head = createNode(val);
                     tail = head;
                 } else {
-                    head->prev = alloc.allocate_and_construct(1, val);
+                    head->prev = createNode(val);
                     head->prev->next = head;
                     head = head->prev;
                 }
@@ -161,14 +165,14 @@ namespace TinySTL {
                 if (head == nullptr)
                     throw std::out_of_range("empty list");
                 if (N == 1) {
-                    alloc.destroy_and_deallocate(head, 1);
+                    deleteNode(head);
                     head = nullptr;
                     tail = nullptr;
                 } else {
                     auto temp = head;
                     head = head->next;
                     head->prev = nullptr;
-                    alloc.destroy_and_deallocate(temp, 1);
+                    deleteNode(temp);
                 }
                 --N;
             }
@@ -176,10 +180,10 @@ namespace TinySTL {
             // add element at end
             void push_back(const T &val) {
                 if (this->empty()) {
-                    head = alloc.allocate_and_construct(1, val);
+                    head = createNode(val);
                     tail = head;
                 } else {
-                    tail->next = alloc.allocate_and_construct(1, val);
+                    tail->next = createNode(val);
                     tail->next->prev = tail;
                     tail = tail->next;
                 }
@@ -191,14 +195,14 @@ namespace TinySTL {
                 if (tail == nullptr)
                     throw std::out_of_range("empty list");
                 if (N == 1) {
-                    alloc.destroy_and_deallocate(head, 1);
+                    deleteNode(head);
                     head = nullptr;
                     tail = nullptr;
                 } else {
                     auto temp = tail;
                     tail = tail->prev;
                     tail->next = nullptr;
-                    alloc.destroy_and_deallocate(temp, 1);
+                    deleteNode(temp);
                     --N;
                 }
             }
@@ -211,7 +215,7 @@ namespace TinySTL {
                     push_back(val);
                 } else {
                     list_node<T> *pivot = pos.curr;
-                    list_node<T> *new_node = alloc.allocate_and_construct(1, val);
+                    list_node<T> *new_node = createNode(val);
                     pivot->prev->next = new_node;
                     new_node->prev = pivot->prev;
                     new_node->next = pivot;
@@ -232,7 +236,7 @@ namespace TinySTL {
                     pivot->prev->next = pivot->next;
                     pivot->next->prev = pivot->prev;
                     pos = Iterator(pivot->next);
-                    alloc.destroy_and_deallocate(pivot, 1);
+                    deleteNode(pivot);
                     --N;
                     return pos;
                 }
@@ -249,7 +253,7 @@ namespace TinySTL {
             void clear() {
                 while (N > 0) {
                     auto rest = head->next;
-                    alloc.destroy_and_deallocate(head, 1);
+                    deleteNode(head);
                     head = rest;
                     --N;
                 }
@@ -271,6 +275,18 @@ namespace TinySTL {
             list_node<T> *head, *tail;
             unsigned int N;
             Alloc alloc;
+
+            template <class ...Args>
+            list_node<T> *createNode(Args... args) {
+                list_node<T> *p = new list_node<T>();
+                p->pval = alloc.allocate_and_construct(1, args...);
+                return p;
+            }
+
+            void deleteNode(list_node<T> *p) {
+                alloc.destroy_and_deallocate(p->pval, 1);
+                delete p;
+            }
 
         friend class Iterator;
         friend class ReverseIterator;

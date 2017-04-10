@@ -6,7 +6,7 @@
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename T, class Alloc = Allocator<tree_node<T>>>
+    template <typename T, class Alloc = Allocator<T>>
     class TreeSet : public Tree<T, Alloc> {
         public:
             class Iterator : public ForwardIterator {
@@ -20,7 +20,7 @@ namespace TinySTL {
                     }
 
                     const T &operator *() {
-                        return curr->val;
+                        return *(curr->pval);
                     }
 
                     Iterator operator ++() {
@@ -68,7 +68,7 @@ namespace TinySTL {
                     }
 
                     const T &operator *() {
-                        return curr->val;
+                        return *(curr->pval);
                     }
 
                     ReverseIterator operator ++() {
@@ -137,9 +137,9 @@ namespace TinySTL {
             Iterator find(const T &val) {
                 tree_node<T> *curr = Tree<T>::root;
                 while (curr != nullptr) {
-                    if (Tree<T>::cmp(val, curr->val))
+                    if (Tree<T>::cmp(val, *(curr->pval)))
                         curr = curr->left;
-                    else if (Tree<T>::cmp(curr->val, val))
+                    else if (Tree<T>::cmp(*(curr->pval), val))
                         curr = curr->right;
                     else
                         return Iterator(curr);
