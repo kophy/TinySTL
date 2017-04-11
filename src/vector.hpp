@@ -35,24 +35,20 @@ namespace TinySTL {
             /*** 2. Iterator ***/
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) {
-                        return (this->curr == I.curr);
-                    }
+                    bool operator ==(const Iterator &I) { return (this->curr == I.curr); }
+                    bool operator !=(const Iterator &I) { return (this->curr != I.curr); }
 
-                    bool operator !=(const Iterator &I) {
-                        return (this->curr != I.curr);
-                    }
-
-                    T &operator *() {
-                        return *curr;
-                    }
+                    T &operator *() { return *curr; }
 
                     Iterator operator ++() {
-                        return Iterator(++curr);
+                        ++curr;
+                        return *this;
                     }
 
                     Iterator operator ++(int dummy) {
-                        return Iterator(curr++);
+                        auto temp = *this;
+                        ++curr;
+                        return temp;
                     }
 
                     Iterator(T *_curr = nullptr) : curr(_curr) {}
@@ -65,71 +61,52 @@ namespace TinySTL {
 
             class ReverseIterator : public BackwardIterator {
                 public:
-                    bool operator ==(const ReverseIterator &I) {
-                        return (this->curr == I.curr);
-                    }
+                    bool operator ==(const ReverseIterator &I) { return (this->curr == I.curr); }
+                    bool operator !=(const ReverseIterator &I) { return (this->curr != I.curr); }
 
-                    bool operator !=(const ReverseIterator &I) {
-                        return (this->curr != I.curr);
-                    }
-
-                    T &operator *() {
-                        return *curr;
-                    }
+                    T &operator *() { return *curr; }
 
                     ReverseIterator operator ++() {
-                        return ReverseIterator(--curr);
+                        --curr;
+                        return *this;
                     }
 
                     ReverseIterator operator ++(int dummy) {
-                        return ReverseIterator(curr--);
+                        auto temp = *this;
+                        --curr;
+                        return temp;
                     }
 
                     ReverseIterator(T *_curr = nullptr) : curr(_curr) {}
 
                 private:
                     T *curr;
-                    Alloc alloc;
 
                 friend class Vector<T>;
             };
 
             // iterator to the beginning
-            Iterator begin() {
-                return Iterator(this->empty()? nullptr : &this->front());
-            }
+            Iterator begin() { return Iterator(this->empty()? nullptr : &this->front()); }
 
             // iterator to the end
-            Iterator end() {
-                return Iterator(this->empty()? nullptr : &(this->back()) + 1);
-            }
+            Iterator end() { return Iterator(this->empty()? nullptr : &(this->back()) + 1); }
 
             // reverse iterator to the beginning
-            ReverseIterator rbegin() {
-                return ReverseIterator(this->empty()? nullptr : &this->back());
-            }
+            ReverseIterator rbegin() { return ReverseIterator(this->empty()? nullptr : &this->back()); }
 
             // reverse iterator to the end
-            ReverseIterator rend() {
-                return ReverseIterator(this->empty()? nullptr : &(this->front()) - 1);
-            }
+            ReverseIterator rend() { return ReverseIterator(this->empty()? nullptr : &(this->front()) - 1); }
 
             /*** 3. Capacity ***/
 
             // checks whether the vector is empty
-            bool empty() {
-                return (used == 0);
-            }
+            bool empty() { return (used == 0); }
 
             // returns the number of elements
-            unsigned int size() {
-                return used;
-            }
+            unsigned int size() { return used; }
 
             // change size to element number
-            void resize() {
-                this->resize(used);
-            }
+            void resize() { this->resize(used); }
 
             // change size to given value
             void resize(unsigned int new_capacity) {

@@ -11,17 +11,10 @@ namespace TinySTL {
         public:
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) {
-                        return this->curr == I.curr;
-                    }
+                    bool operator ==(const Iterator &I) { return this->curr == I.curr; }
+                    bool operator !=(const Iterator &I) { return this->curr != I.curr; }
 
-                    bool operator !=(const Iterator &I) {
-                        return this->curr != I.curr;
-                    }
-
-                    const T &operator *() {
-                        return *(curr->pval);
-                    }
+                    const T &operator *() { return *(curr->pval); }
 
                     Iterator operator ++() {
                         advance();
@@ -59,17 +52,10 @@ namespace TinySTL {
 
             class ReverseIterator : public BackwardIterator {
                 public:
-                    bool operator ==(const ReverseIterator &I) {
-                        return this->curr == I.curr;
-                    }
+                    bool operator ==(const ReverseIterator &I) { return this->curr == I.curr; }
+                    bool operator !=(const ReverseIterator &I) { return this->curr != I.curr; }
 
-                    bool operator !=(const ReverseIterator &I) {
-                        return this->curr != I.curr;
-                    }
-
-                    const T &operator *() {
-                        return *(curr->pval);
-                    }
+                    const T &operator *() { return *(curr->pval); }
 
                     ReverseIterator operator ++() {
                         advance();
@@ -107,7 +93,7 @@ namespace TinySTL {
 
             // iterator to the beginning
             Iterator begin() {
-                tree_node<T> *curr = Tree<T>::root;
+                auto curr = base::root;
                 if (curr != nullptr)
                     while (curr->left != nullptr)
                         curr = curr->left;
@@ -115,13 +101,11 @@ namespace TinySTL {
             }
 
             // iterator to the end
-            Iterator end() {
-                return Iterator();
-            }
+            Iterator end() { return Iterator(); }
 
             // reverse iterator to the beginning
             ReverseIterator rbegin() {
-                tree_node<T> *curr = Tree<T>::root;
+                auto curr = base::root;
                 if (curr != nullptr)
                     while (curr->right != nullptr)
                         curr = curr->right;
@@ -129,17 +113,15 @@ namespace TinySTL {
             }
 
             // reverse iterator to the end
-            ReverseIterator rend() {
-                return ReverseIterator();
-            }
+            ReverseIterator rend() { return ReverseIterator(); }
 
             // iterator to element with specific key
             Iterator find(const T &val) {
-                tree_node<T> *curr = Tree<T>::root;
+                tree_node<T> *curr = base::root;
                 while (curr != nullptr) {
-                    if (Tree<T>::cmp(val, *(curr->pval)))
+                    if (base::cmp(val, *(curr->pval)))
                         curr = curr->left;
-                    else if (Tree<T>::cmp(*(curr->pval), val))
+                    else if (base::cmp(*(curr->pval), val))
                         curr = curr->right;
                     else
                         return Iterator(curr);
@@ -147,8 +129,10 @@ namespace TinySTL {
                 return this->end();
             }
 
-            TreeSet(bool (*_cmp)(const T &a, const T &b) = Less<T>) :
-                Tree<T>::Tree(_cmp) {}
+            TreeSet(bool (*_cmp)(const T &a, const T &b) = Less<T>) : Tree<T>::Tree(_cmp) {}
+
+        private:
+            typedef Tree<T> base;
 
         friend class Iterator;
         friend class ReverseIterator;

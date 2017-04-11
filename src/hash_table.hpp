@@ -11,14 +11,10 @@ namespace TinySTL {
     class HashTable {
         public:
             // checks whether the hash table is empty
-            bool empty() {
-                return (entry_number == 0);
-            }
+            bool empty() { return (entry_number == 0); }
 
             // returns the number of elements
-            unsigned int size() {
-                return entry_number;
-            }
+            unsigned int size() { return entry_number; }
 
             // returns the number of elements matching specific key
             unsigned int count(const T &val) {
@@ -30,9 +26,8 @@ namespace TinySTL {
             void insert(const T &val) {
                 if (this->count(val) > 0)
                     return;
-                if (entry_number * 1.0 / bucket_number >= alpha) {
+                if (entry_number * 1.0 / bucket_number >= alpha)
                     rehash(2 * bucket_number);
-                }
                 unsigned int id = this->hash(val) % bucket_number;
                 (*data)[id].push_back(val);
                 ++entry_number;
@@ -55,21 +50,14 @@ namespace TinySTL {
                 entry_number = 0;
             }
 
-            HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>,
-                      unsigned long (*_hash)(const T &val) = Hash<T>,
-                      double _alpha = 1.0) {
-                alpha = _alpha;
-                hash = _hash;
-                pred = _pred;
-
+            HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>, unsigned long (*_hash)(const T &val) = Hash<T>,
+                      double _alpha = 1.0) : alpha(_alpha), hash(_hash), pred(_pred) {
                 data = new Vector<List<T, Alloc>>(1);
                 bucket_number = 1;
                 entry_number = 0;
             }
 
-            ~HashTable() {
-                delete data;
-            }
+            ~HashTable() { delete data; }
 
         protected:
             Vector<List<T, Alloc>> *data;
@@ -79,13 +67,13 @@ namespace TinySTL {
             unsigned long (*hash)(const T &val);
             bool (*pred)(const T &a, const T &b);
 
+            // TODO: better resize strategy
             void rehash(unsigned int new_bucket_number) {
-                Vector<List<T, Alloc>> *temp = new Vector<List<T, Alloc>>(new_bucket_number);
+                auto temp = new Vector<List<T, Alloc>>(new_bucket_number);
                 for (int i = 0; i < data->size(); ++i) {
                     for (auto iter = (*data)[i].begin(); iter != (*data)[i].end(); ++iter) {
-                        T val = *iter;
-                        unsigned int id = hash(val) % new_bucket_number;
-                        (*temp)[id].push_back(val);
+                        unsigned int id = hash(*iter) % new_bucket_number;
+                        (*temp)[id].push_back(*iter);
                     }
                 }
                 delete data;

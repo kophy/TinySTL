@@ -22,9 +22,7 @@ namespace TinySTL {
             }
 
             // return size
-            unsigned int size() {
-                return N;
-            }
+            unsigned int size() { return N; }
 
             // return bit value
             bool test(unsigned int pos) {
@@ -60,18 +58,11 @@ namespace TinySTL {
 
             class reference {
                 public:
-                    void operator =(bool val) {
-                        data->set(pos, val);
-                    }
-
-                    void operator =(const reference &r) {
-                        data->set(pos, data->test(r.pos));
-                    }
+                    void operator =(bool val) { data->set(pos, val); }
+                    void operator =(const reference &r) { data->set(pos, data->test(r.pos)); }
 
                     // implicit type conversion
-                    operator bool() const {
-                        return data->test(pos);
-                    }
+                    operator bool() const { return data->test(pos); }
 
                     reference(Bitset<N> *_data, unsigned int _pos) : data(_data), pos(_pos) {}
                 private:
@@ -82,9 +73,7 @@ namespace TinySTL {
             };
 
             // access bit: read
-            reference operator [](unsigned int pos) {
-                return reference(this, pos);
-            }
+            reference operator [](unsigned int pos) { return reference(this, pos); }
 
             /*** 2. Bit Operations ***/
 
@@ -129,18 +118,13 @@ namespace TinySTL {
                 unsigned int len = ceil(N * 1.0 / sizeof(char));
                 data = new char[len];
                 for (int i = 0; i < N; ++i) {
-                    if (val % 2)
-                        set(i);
-                    else
-                        reset(i);
+                    set(i, val % 2 == 1);
                     val /= 2;
                 }
             }
 
             // destructor
-            ~Bitset() {
-                delete data;
-            }
+            ~Bitset() { delete data; }
 
         private:
             char *data;

@@ -12,19 +12,13 @@ namespace TinySTL {
         public:
 
             // access top element
-            T &top() {
-                return data.front();
-            }
+            T &top() { return data.front(); }
 
             // checks whether the heap is empty
-            bool empty() {
-                return data.empty();
-            }
+            bool empty() { return data.empty(); }
 
             // returns the number of elements
-            unsigned int size() {
-                return data.size();
-            }
+            unsigned int size() { return data.size(); }
 
             // insert element
             void push(const T &val) {

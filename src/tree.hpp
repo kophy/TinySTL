@@ -12,9 +12,7 @@ namespace TinySTL {
 
         tree_node() {
             pval = nullptr;
-            left = nullptr;
-            right = nullptr;
-            parent = nullptr;
+            left = right = parent = nullptr;
         }
     };
 
@@ -22,14 +20,10 @@ namespace TinySTL {
     class Tree {
         public:
             // checks whether the tree is empty
-            bool empty() {
-                return (node_number == 0);
-            }
+            bool empty() { return (node_number == 0); }
 
             // returns the number of elements
-            unsigned int size() {
-                return node_number;
-            }
+            unsigned int size() { return node_number; }
 
             // returns the number of elements matching specific key
             unsigned int count(const T &val) {
@@ -39,14 +33,10 @@ namespace TinySTL {
             }
 
             // insert elements
-            void insert(const T &val) {
-                insert(root, val);
-            }
+            void insert(const T &val) { insert(root, val); }
 
             // erase elements
-            void erase(const T &val) {
-                erase(root, val);
-            }
+            void erase(const T &val)  { erase(root, val); }
 
             // clear content
             void clear() {
@@ -54,15 +44,9 @@ namespace TinySTL {
                 root = nullptr;
             }
 
-            Tree(bool (*_cmp)(const T &a, const T &b) = Less<T>) {
-                root = nullptr;
-                node_number = 0;
-                cmp = _cmp;
-            }
+            Tree(bool (*_cmp)(const T &a, const T &b) = Less<T>) : root(nullptr), node_number(0), cmp(_cmp) {}
 
-            ~Tree() {
-                clear();
-            }
+            ~Tree() { clear(); }
 
         protected:
             tree_node<T> *root;
@@ -92,10 +76,7 @@ namespace TinySTL {
                 ++this->node_number;
                 while (curr != nullptr) {
                     new_node->parent = curr;
-                    if (cmp(val, *(curr->pval)))
-                        curr = curr->left;
-                    else
-                        curr = curr->right;
+                    curr = cmp(val, *(curr->pval))? curr->left : curr->right;
                 }
                 if (new_node->parent == nullptr)
                     this->root = new_node;

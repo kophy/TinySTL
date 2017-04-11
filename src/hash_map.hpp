@@ -19,24 +19,13 @@ namespace TinySTL {
     template <typename Key, typename Value, class Alloc = Allocator<Pair<const Key, Value>>>
     class HashMap : public HashTable<Pair<const Key, Value>, Alloc> {
         public:
-
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) {
-                        return (this->bucket_id == I.bucket_id && this->pos == I.pos);
-                    }
+                    bool operator ==(const Iterator &I) { return (this->bucket_id == I.bucket_id && this->pos == I.pos); }
+                    bool operator !=(const Iterator &I) { return (this->bucket_id != I.bucket_id || this->pos != I.pos); }
 
-                    bool operator !=(const Iterator &I) {
-                        return (this->bucket_id != I.bucket_id || this->pos != I.pos);
-                    }
-
-                    Pair<const Key, Value> &operator *() {
-                        return *pos;
-                    }
-
-                    Pair<const Key, Value> *operator ->() {
-                        return &(*pos);
-                    }
+                    Pair<const Key, Value> &operator *()  { return *pos; }
+                    Pair<const Key, Value> *operator ->() { return &(*pos); }
 
                     Iterator operator ++() {
                         advance();
@@ -49,10 +38,7 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(Vector<List<Pair<const Key, Value>>> *_data = nullptr) {
-                        data = _data;
-                        bucket_id = 0;
-                    }
+                    Iterator(Vector<List<Pair<const Key, Value>>> *_data = nullptr) : data(_data), bucket_id(0) {}
 
                 private:
                     Vector<List<Pair<const Key, Value>>> *data;
@@ -74,37 +60,36 @@ namespace TinySTL {
 
             // iterator to the beginning
             Iterator begin() {
-                Iterator temp(HashTable<Pair<const Key, Value>>::data);
+                Iterator temp(base::data);
                 if (this->empty()) {
-                    temp.bucket_id = HashTable<Pair<const Key, Value>>::bucket_number - 1;
-                    temp.pos = (*HashTable<Pair<const Key, Value>>::data).back().end();
+                    temp.bucket_id = base::bucket_number - 1;
+                    temp.pos = (*base::data).back().end();
                 } else {
                     int id = 0;
-                    while ((*HashTable<Pair<const Key, Value>>::data)[id].empty())
+                    while ((*base::data)[id].empty())
                         ++id;
                     temp.bucket_id = id;
-                    temp.pos = (*HashTable<Pair<const Key, Value>>::data)[id].begin();
+                    temp.pos = (*base::data)[id].begin();
                 }
                 return temp;
             }
 
             // iterator to the end
             Iterator end() {
-                Iterator temp(HashTable<Pair<const Key, Value>>::data);
-                temp.bucket_id = HashTable<Pair<const Key, Value>>::bucket_number;
-                temp.pos = (*HashTable<Pair<const Key, Value>>::data).back().end();
+                Iterator temp(base::data);
+                temp.bucket_id = base::bucket_number;
+                temp.pos = (*base::data).back().end();
                 return temp;
             }
 
             // iterator to element with specific key
             Iterator find(const Key &k) {
                 auto kv = MakePair<const Key, Value>(k, Value());
-                unsigned int id = this->hash(kv) % HashTable<Pair<const Key, Value>>::bucket_number;
+                unsigned int id = this->hash(kv) % base::bucket_number;
                 Iterator temp;
                 temp.bucket_id = id;
-                for (auto iter = (*HashTable<Pair<const Key, Value>>::data)[id].begin();
-                         iter != (*HashTable<Pair<const Key, Value>>::data)[id].end(); ++iter) {
-                    if (HashTable<Pair<const Key, Value>>::pred(*iter, kv)) {
+                for (auto iter = (*base::data)[id].begin(); iter != (*base::data)[id].end(); ++iter) {
+                    if (base::pred(*iter, kv)) {
                         temp.pos = iter;
                         return temp;
                     }
@@ -124,23 +109,25 @@ namespace TinySTL {
 
             // insert wrapper
             void insert(const Key &k, const Value &v) {
-                HashTable<Pair<const Key, Value>>::insert(MakePair<const Key, Value>(k, v));
+                base::insert(MakePair<const Key, Value>(k, v));
             }
 
             // erase wrapper
             void erase(const Key &k) {
-                HashTable<Pair<const Key, Value>>::erase(MakePair<const Key, Value>(k, Value()));
+                base::erase(MakePair<const Key, Value>(k, Value()));
             }
 
             // count wrapper
             unsigned int count(const Key &k) {
-                return HashTable<Pair<const Key, Value>>::count(MakePair<const Key, Value>(k, Value()));
+                return base::count(MakePair<const Key, Value>(k, Value()));
             }
 
             HashMap(bool (*_pred)(const Pair<const Key, Value> &a, const Pair<const Key, Value> &b) = isEqualKey<Key, Value>,
-                    unsigned long (*_hash)(const Pair<const Key, Value> &val) = hashByKey<Key, Value>,
-                    double _alpha = 1.0) :
+                    unsigned long (*_hash)(const Pair<const Key, Value> &val) = hashByKey<Key, Value>, double _alpha = 1.0) :
                     HashTable<Pair<const Key, Value>, Alloc>::HashTable(_pred, _hash, _alpha) {}
+
+        private:
+            typedef HashTable<Pair<const Key, Value>> base;
 
         friend class Iterator;
     };

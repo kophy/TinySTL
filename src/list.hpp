@@ -11,11 +11,7 @@ namespace TinySTL {
         U *pval;
         list_node *prev, *next;
 
-        list_node() {
-            pval = nullptr;
-            prev = nullptr;
-            next = nullptr;
-        }
+        list_node() : pval(nullptr), prev(nullptr), next(nullptr) {}
     };
 
     template <typename T, class Alloc = Allocator<T>>
@@ -41,17 +37,10 @@ namespace TinySTL {
 
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) {
-                        return (this->curr == I.curr);
-                    }
+                    bool operator ==(const Iterator &I) { return (this->curr == I.curr); }
+                    bool operator !=(const Iterator &I) { return (this->curr != I.curr); }
 
-                    bool operator !=(const Iterator &I) {
-                        return (this->curr != I.curr);
-                    }
-
-                    T &operator *() {
-                        return *(curr->pval);
-                    }
+                    T &operator *() { return *(curr->pval); }
 
                     Iterator operator ++() {
                         advance();
@@ -67,9 +56,7 @@ namespace TinySTL {
                     Iterator(list_node<T> *_curr = nullptr) : curr(_curr) {}
 
                 private:
-                    void advance() {
-                        curr = curr->next;
-                    }
+                    void advance() { curr = curr->next; }
 
                     list_node<T> *curr;
 
@@ -78,17 +65,10 @@ namespace TinySTL {
 
             class ReverseIterator : public BackwardIterator {
                 public:
-                    bool operator ==(const ReverseIterator &I) {
-                        return (this->curr == I.curr);
-                    }
+                    bool operator ==(const ReverseIterator &I) { return (this->curr == I.curr); }
+                    bool operator !=(const ReverseIterator &I) { return (this->curr != I.curr); }
 
-                    bool operator !=(const ReverseIterator &I) {
-                        return (this->curr != I.curr);
-                    }
-
-                    T &operator *() {
-                        return *(curr->pval);
-                    }
+                    T &operator *() { return *(curr->pval); }
 
                     ReverseIterator operator ++() {
                         advance();
@@ -104,9 +84,7 @@ namespace TinySTL {
                     ReverseIterator(list_node<T> *_curr = nullptr) : curr(_curr) {}
 
                 private:
-                    void advance() {
-                        curr = curr->prev;
-                    }
+                    void advance() { curr = curr->prev; }
 
                     list_node<T> *curr;
 
@@ -114,36 +92,24 @@ namespace TinySTL {
             };
 
             // iterator to the beginning
-            Iterator begin() {
-                return Iterator(head);
-            }
+            Iterator begin() { return Iterator(head); }
 
             // iterator to the end
-            Iterator end() {
-                return Iterator(nullptr);
-            }
+            Iterator end() { return Iterator(nullptr); }
 
             // reverse iterator to the beginning
-            ReverseIterator rbegin() {
-                return ReverseIterator(tail);
-            }
+            ReverseIterator rbegin() { return ReverseIterator(tail); }
 
             // reverse iterator to the end
-            ReverseIterator rend() {
-                return ReverseIterator(nullptr);
-            }
+            ReverseIterator rend() { return ReverseIterator(nullptr); }
 
             /*** 3. Capacity ***/
 
             // checks whether the list is empty
-            bool empty() {
-                return (N == 0);
-            }
+            bool empty() { return (N == 0); }
 
             // returns the number of elements
-            unsigned int size() {
-                return N;
-            }
+            unsigned int size() { return N; }
 
             /*** 4. Modifiers ***/
 
@@ -166,8 +132,7 @@ namespace TinySTL {
                     throw std::out_of_range("empty list");
                 if (N == 1) {
                     deleteNode(head);
-                    head = nullptr;
-                    tail = nullptr;
+                    head = tail = nullptr;
                 } else {
                     auto temp = head;
                     head = head->next;
@@ -196,8 +161,7 @@ namespace TinySTL {
                     throw std::out_of_range("empty list");
                 if (N == 1) {
                     deleteNode(head);
-                    head = nullptr;
-                    tail = nullptr;
+                    head = tail = nullptr;
                 } else {
                     auto temp = tail;
                     tail = tail->prev;
@@ -251,14 +215,12 @@ namespace TinySTL {
 
             // clear content
             void clear() {
-                while (N > 0) {
+                for (; N > 0; --N) {
                     auto rest = head->next;
                     deleteNode(head);
                     head = rest;
-                    --N;
                 }
-                head = nullptr;
-                tail = nullptr;
+                head = tail = nullptr;
             }
 
             /*** 5. Constructor and Destructor ***/
@@ -267,9 +229,7 @@ namespace TinySTL {
             List() : head(nullptr), tail(nullptr), N(0) {}
 
             // destructor
-            ~List() {
-                clear();
-            }
+            ~List() { clear(); }
 
         private:
             list_node<T> *head, *tail;

@@ -15,21 +15,11 @@ namespace TinySTL {
         public:
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) {
-                        return this->curr == I.curr;
-                    }
+                    bool operator ==(const Iterator &I) { return this->curr == I.curr; }
+                    bool operator !=(const Iterator &I) { return this->curr != I.curr; }
 
-                    bool operator !=(const Iterator &I) {
-                        return this->curr != I.curr;
-                    }
-
-                    Pair<const Key, Value> &operator *() {
-                        return *(curr->pval);
-                    }
-
-                    Pair<const Key, Value> *operator ->() {
-                        return curr->pval;
-                    }
+                    Pair<const Key, Value> &operator *()  { return *(curr->pval); }
+                    Pair<const Key, Value> *operator ->() { return curr->pval; }
 
                     Iterator operator ++() {
                         advance();
@@ -67,21 +57,11 @@ namespace TinySTL {
 
             class ReverseIterator : public BackwardIterator {
                 public:
-                    bool operator ==(const ReverseIterator &I) {
-                        return this->curr == I.curr;
-                    }
+                    bool operator ==(const ReverseIterator &I) { return this->curr == I.curr; }
+                    bool operator !=(const ReverseIterator &I) { return this->curr != I.curr; }
 
-                    bool operator !=(const ReverseIterator &I) {
-                        return this->curr != I.curr;
-                    }
-
-                    Pair<const Key, Value> &operator *() {
-                        return *(curr->pval);
-                    }
-
-                    Pair<const Key, Value> *operator ->() {
-                        return curr->pval;
-                    }
+                    Pair<const Key, Value> &operator *()  { return *(curr->pval); }
+                    Pair<const Key, Value> *operator ->() { return curr->pval; }
 
                     ReverseIterator operator ++() {
                         advance();
@@ -119,7 +99,7 @@ namespace TinySTL {
 
             // iterator to the beginning
             Iterator begin() {
-                tree_node<Pair<const Key, Value>> *curr = Tree<Pair<const Key, Value>>::root;
+                auto curr = base::root;
                 if (curr != nullptr)
                     while (curr->left != nullptr)
                         curr = curr->left;
@@ -127,13 +107,11 @@ namespace TinySTL {
             }
 
             // iterator to the end
-            Iterator end() {
-                return Iterator();
-            }
+            Iterator end() { return Iterator(); }
 
             // reverse iterator to the beginning
             ReverseIterator rbegin() {
-                tree_node<Pair<const Key, Value>> *curr = Tree<Pair<const Key, Value>>::root;
+                auto curr = base::root;
                 if (curr != nullptr)
                     while (curr->right != nullptr)
                         curr = curr->right;
@@ -141,18 +119,16 @@ namespace TinySTL {
             }
 
             // reverse iterator to the end
-            ReverseIterator rend() {
-                return ReverseIterator();
-            }
+            ReverseIterator rend() { return ReverseIterator(); }
 
             // iterator to element with specific key
             Iterator find(const Key &k) {
                 auto kv = MakePair<const Key, Value>(k, Value());
-                tree_node<Pair<const Key, Value>> *curr = Tree<Pair<const Key, Value>>::root;
+                auto curr = base::root;
                 while (curr != nullptr) {
-                    if (Tree<Pair<const Key, Value>>::cmp(kv, *(curr->pval)))
+                    if (base::cmp(kv, *(curr->pval)))
                         curr = curr->left;
-                    else if (Tree<Pair<const Key, Value>>::cmp(*(curr->pval), kv))
+                    else if (base::cmp(*(curr->pval), kv))
                         curr = curr->right;
                     else
                         return Iterator(curr);
@@ -172,21 +148,27 @@ namespace TinySTL {
 
             // insert wrapper
             void insert(const Key &k, const Value &v) {
-                Tree<Pair<const Key, Value>>::insert(MakePair<const Key, Value>(k, v));
+                base::insert(MakePair<const Key, Value>(k, v));
             }
 
             // erase wrapper
             void erase(const Key &k) {
-                Tree<Pair<const Key, Value>>::erase(MakePair<const Key, Value>(k, Value()));
+                base::erase(MakePair<const Key, Value>(k, Value()));
             }
 
             // count wrapper
             unsigned int count(const Key &k) {
-                return Tree<Pair<const Key, Value>>::count(MakePair<const Key, Value>(k, Value()));
+                return base::count(MakePair<const Key, Value>(k, Value()));
             }
 
             TreeMap(bool (*_cmp)(const Pair<const Key, Value> &a, const Pair<const Key, Value> &b) = compareKey) :
                 Tree<Pair<const Key, Value>, Alloc>::Tree(_cmp) {}
+
+        private:
+            typedef Tree<Pair<const Key, Value>> base;
+
+        friend class Iterator;
+        friend class ReverseIterator;
     };
 };
 

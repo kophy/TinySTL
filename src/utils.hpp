@@ -12,7 +12,6 @@ namespace TinySTL {
         N second;
 
         Pair() {}
-
         Pair(M _first, N _second) : first(_first), second(_second) {}
     };
 
@@ -61,9 +60,7 @@ namespace TinySTL {
 
     // just a naive wrapper
     template <typename T>
-    unsigned long Hash(const T &val) {
-        return std::hash<T>()(val);
-    }
+    unsigned long Hash(const T &val) { return std::hash<T>()(val); }
 
     template <typename T, typename Iterator>
     Iterator Find(Iterator begin, Iterator end, const T &val, bool (*pred)(const T &a, const T &b) = Equal<T>) {
