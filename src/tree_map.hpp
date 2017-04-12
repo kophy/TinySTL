@@ -37,20 +37,7 @@ namespace TinySTL {
                 private:
                     tree_node<Pair<const Key, Value>> *curr;
 
-                    void advance() {
-                        if (curr->right != nullptr) {
-                            curr = curr->right;
-                            while (curr->left != nullptr)
-                                curr = curr->left;
-                        } else {
-                            auto next = curr->parent;
-                            while (next != nullptr && curr == next->right) {
-                                curr = next;
-                                next = next->parent;
-                            }
-                            curr = next;
-                        }
-                    }
+                    void advance() { curr = findSuccessor(curr); }
 
                 friend class TreeMap<Key, Value>;
             };
@@ -79,61 +66,27 @@ namespace TinySTL {
                 private:
                     tree_node<Pair<const Key, Value>> *curr;
 
-                    void advance() {
-                        if (curr->left != nullptr) {
-                            curr = curr->left;
-                            while (curr->right != nullptr)
-                                curr = curr->right;
-                        } else {
-                            auto next = curr->parent;
-                            while (next != nullptr && curr == next->left) {
-                                curr = next;
-                                next = next->parent;
-                            }
-                            curr = next;
-                        }
-                    }
+                    void advance() { curr = findPrecursor(curr); }
 
                 friend class TreeMap<Key, Value>;
             };
 
             // iterator to the beginning
-            Iterator begin() {
-                auto curr = base::root;
-                if (curr != nullptr)
-                    while (curr->left != nullptr)
-                        curr = curr->left;
-                return Iterator(curr);
-            }
+            Iterator begin() { return Iterator(base::findLeftmost()); }
 
             // iterator to the end
-            Iterator end() { return Iterator(); }
+            Iterator end()   { return Iterator(); }
 
             // reverse iterator to the beginning
-            ReverseIterator rbegin() {
-                auto curr = base::root;
-                if (curr != nullptr)
-                    while (curr->right != nullptr)
-                        curr = curr->right;
-                return ReverseIterator(curr);
-            }
+            ReverseIterator rbegin() { return ReverseIterator(base::findRightmost()); }
 
             // reverse iterator to the end
-            ReverseIterator rend() { return ReverseIterator(); }
+            ReverseIterator rend()   { return ReverseIterator(); }
 
             // iterator to element with specific key
             Iterator find(const Key &k) {
                 auto kv = MakePair<const Key, Value>(k, Value());
-                auto curr = base::root;
-                while (curr != nullptr) {
-                    if (base::cmp(kv, *(curr->pval)))
-                        curr = curr->left;
-                    else if (base::cmp(*(curr->pval), kv))
-                        curr = curr->right;
-                    else
-                        return Iterator(curr);
-                }
-                return this->end();
+                return Iterator(base::find(kv));
             }
 
             // access element

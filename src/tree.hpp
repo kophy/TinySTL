@@ -5,9 +5,9 @@
 #include "utils.hpp"
 
 namespace TinySTL {
-    template <typename U>
+    template <typename T>
     struct tree_node {
-        U *pval;
+        T *pval;
         tree_node *left, *right, *parent;
 
         tree_node() {
@@ -15,6 +15,40 @@ namespace TinySTL {
             left = right = parent = nullptr;
         }
     };
+
+    template <typename T>
+    tree_node<T> *findSuccessor(tree_node<T> *curr) {
+        if (curr->right != nullptr) {
+            curr = curr->right;
+            while (curr->left != nullptr)
+                curr = curr->left;
+        } else {
+            auto next = curr->parent;
+            while (next != nullptr && curr == next->right) {
+                curr = next;
+                next = next->parent;
+            }
+            curr = next;
+        }
+        return curr;
+    }
+
+    template <typename T>
+    tree_node<T> *findPrecursor(tree_node<T> *curr) {
+        if (curr->left != nullptr) {
+            curr = curr->left;
+            while (curr->right != nullptr)
+                curr = curr->right;
+        } else {
+            auto next = curr->parent;
+            while (next != nullptr && curr == next->left) {
+                curr = next;
+                next = next->parent;
+            }
+            curr = next;
+        }
+        return curr;
+    }
 
     template <typename T, class Alloc = Allocator<T>>
     class Tree {
@@ -139,6 +173,33 @@ namespace TinySTL {
             void deleteNode(tree_node<T> *p) {
                 alloc.destroy_and_deallocate(p->pval, 1);
                 delete p;
+            }
+
+            tree_node<T> *findLeftmost() {
+                auto curr = root;
+                while (curr != nullptr && curr->left != nullptr)
+                    curr = curr->left;
+                return curr;
+            }
+
+            tree_node<T> *findRightmost() {
+                auto curr = root;
+                while (curr != nullptr && curr->right != nullptr)
+                        curr = curr->right;
+                return curr;
+            }
+
+            tree_node<T> *find(const T &val) {
+                auto curr = root;
+                while (curr != nullptr) {
+                    if (cmp(val, *(curr->pval)))
+                        curr = curr->left;
+                    else if (cmp(*(curr->pval), val))
+                        curr = curr->right;
+                    else
+                        break;
+                }
+                return curr;
             }
     };
 };
