@@ -3,9 +3,7 @@
 
 *A toy implementation of some basic containers to practice data structures and algorithms.*  
 
-## Content
-
-**STL Containers**
+## Progress
 - [x] Allocator
 - [x] Array
 - [x] List
@@ -18,10 +16,6 @@
 - [x] HashMap (unordered_map)
 - [x] TreeMap (map)
 - [x] Bitset
-
-**Not STL Containers**
-- [ ] Graph
-- [ ] Matrix
 
 ## TODO
 - ~~add allocator~~
