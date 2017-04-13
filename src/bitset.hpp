@@ -33,28 +33,13 @@ namespace TinySTL {
             }
 
             // test if any bit is set
-            bool any() {
-                for (int i = 0; i < N; ++i)
-                    if (test(i))
-                        return true;
-                return false;
-            }
+            bool any()  { return count() > 0; }
 
             // test if no bit is set
-            bool none() {
-                for (int i = 0; i < N; ++i)
-                    if (test(i))
-                        return false;
-                return true;
-            }
+            bool none() { return count() == 0; }
 
             // test if all bits are set
-            bool all() {
-                for (int i = 0; i < N; ++i)
-                    if (!test(i))
-                        return false;
-                return true;
-            }
+            bool all()  { return count() == N; }
 
             class reference {
                 public:

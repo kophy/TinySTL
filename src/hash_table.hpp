@@ -7,6 +7,7 @@
 #include "utils.hpp"
 
 namespace TinySTL {
+
     template <typename T, class Alloc = Allocator<T>>
     class HashTable {
         public:
