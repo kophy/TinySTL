@@ -11,45 +11,34 @@ namespace TinySTL {
         M first;
         N second;
 
-        bool operator ==(const Pair<M, N> &other) { return this->first == other.first && this->second == other.second; }
-        bool operator !=(const Pair<M, N> &other) { return this->first != other.first || this->second != other.second; }
+        bool operator ==(const Pair<M, N> &other) { return first == other.first && second == other.second; }
+        bool operator !=(const Pair<M, N> &other) { return first != other.first || second != other.second; }
 
         Pair() {}
         Pair(M _first, N _second) : first(_first), second(_second) {}
     };
 
     template <typename M, typename N>
-    inline Pair<M, N> MakePair(const M &_first, const N &_second) {
-        return Pair<M, N>(_first, _second);
-    }
+    inline Pair<M, N> MakePair(const M &_first, const N &_second) { return Pair<M, N>(_first, _second); }
 
     /*** Compare ***/
     template <typename T>
-    bool Less(const T &a, const T &b) {
-        return a < b;
-    };
+    bool Less(const T &a, const T &b)    { return a < b; };
 
     template <typename T>
-    bool Greater(const T &a, const T &b) {
-        return a > b;
-    }
+    bool Greater(const T &a, const T &b) { return a > b; }
 
     template <typename T>
-    bool Equal(const T &a, const T &b) {
-        return a == b;
-    }
+    bool Equal(const T &a, const T &b)   { return a == b; }
+
+    // decltype(Less<T>) = bool (*cmp)(const T &, const T &)
+    template <typename T>
+    T Min(const T &a, const T &b, decltype(Less<T>) cmp = Less<T>) { return cmp(a, b)? a : b; }
 
     template <typename T>
-    T Min(const T &a, const T &b, bool (*cmp)(const T &a, const T &b) = Less<T>) {
-        return cmp(a, b)? a : b;
-    }
+    T Max(const T &a, const T &b, decltype(Less<T>) cmp = Less<T>) { return cmp(a, b)? b : a; }
 
-    template <typename T>
-    T Max(const T &a, const T &b, bool (*cmp)(const T &a, const T &b) = Less<T>) {
-        return cmp(a, b)? b : a;
-    }
-
-    /*** Iterator ***/
+    /*** Iterator Tag ***/
     class ForwardIterator {};
     class BackwardIterator {};
 

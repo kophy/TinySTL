@@ -88,13 +88,12 @@ namespace TinySTL {
             typedef Pair<unsigned int, list_iter> HashEntry;
 
             HashEntry findBegin() {
-                unsigned int id;
+                unsigned int id = 0;
                 list_iter pos;
                 if (this->empty()) {
                     id = bucket_number - 1;
                     pos = (*data).back().end();
                 } else {
-                    id = 0;
                     while ((*data)[id].empty())
                         ++id;
                     pos = (*data)[id].begin();

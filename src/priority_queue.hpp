@@ -10,7 +10,6 @@ namespace TinySTL {
     template <typename T, typename Container = Vector<T>>
     class PriorityQueue {
         public:
-
             // access top element
             T &top() { return data.front(); }
 
