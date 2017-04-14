@@ -21,11 +21,11 @@ namespace TinySTL {
         public:
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) { return (this->bucket_id == I.bucket_id && this->pos == I.pos); }
-                    bool operator !=(const Iterator &I) { return (this->bucket_id != I.bucket_id || this->pos != I.pos); }
+                    bool operator ==(const Iterator &I) { return (this->data == I.data && this->e == I.e); }
+                    bool operator !=(const Iterator &I) { return (this->data != I.data || this->e != I.e); }
 
-                    Pair<const Key, Value> &operator *()  { return *pos; }
-                    Pair<const Key, Value> *operator ->() { return &(*pos); }
+                    Pair<const Key, Value> &operator *()  { return *(e.second); }
+                    Pair<const Key, Value> *operator ->() { return &(*(e.second)); }
 
                     Iterator operator ++() {
                         advance();
@@ -38,63 +38,28 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(Vector<List<Pair<const Key, Value>>> *_data = nullptr) : data(_data), bucket_id(0) {}
+                    Iterator(HashMap<Key, Value, Alloc> *_data, typename HashMap<Key, Value>::HashEntry _e) :
+                        data(_data), e(_e) {}
 
                 private:
-                    Vector<List<Pair<const Key, Value>>> *data;
-                    unsigned int bucket_id;
-                    typename List<Pair<const Key, Value>>::Iterator pos;
+                    HashMap<Key, Value, Alloc> *data;
+                    typename HashMap<Key, Value>::HashEntry e;
 
-                    void advance() {
-                        ++pos;
-                        while (pos == (*data)[bucket_id].end()) {
-                            ++bucket_id;
-                            if (bucket_id == (*data).size())
-                                break;
-                            pos = (*data)[bucket_id].begin();
-                        }
-                    }
+                    void advance() { e = data->findNext(e); }
 
                 friend class HashMap<Key, Value>;
             };
 
             // iterator to the beginning
-            Iterator begin() {
-                Iterator temp(base::data);
-                if (this->empty()) {
-                    temp.bucket_id = base::bucket_number - 1;
-                    temp.pos = (*base::data).back().end();
-                } else {
-                    int id = 0;
-                    while ((*base::data)[id].empty())
-                        ++id;
-                    temp.bucket_id = id;
-                    temp.pos = (*base::data)[id].begin();
-                }
-                return temp;
-            }
+            Iterator begin() { return Iterator(this, base::findBegin()); }
 
             // iterator to the end
-            Iterator end() {
-                Iterator temp(base::data);
-                temp.bucket_id = base::bucket_number;
-                temp.pos = (*base::data).back().end();
-                return temp;
-            }
+            Iterator end()   { return Iterator(this, base::findEnd()); }
 
             // iterator to element with specific key
             Iterator find(const Key &k) {
                 auto kv = MakePair<const Key, Value>(k, Value());
-                unsigned int id = this->hash(kv) % base::bucket_number;
-                Iterator temp;
-                temp.bucket_id = id;
-                for (auto iter = (*base::data)[id].begin(); iter != (*base::data)[id].end(); ++iter) {
-                    if (base::pred(*iter, kv)) {
-                        temp.pos = iter;
-                        return temp;
-                    }
-                }
-                return this->end();
+                return Iterator(this, base::find(kv));
             }
 
             // access element
@@ -108,19 +73,13 @@ namespace TinySTL {
             }
 
             // insert wrapper
-            void insert(const Key &k, const Value &v) {
-                base::insert(MakePair<const Key, Value>(k, v));
-            }
+            void insert(const Key &k, const Value &v) { base::insert(MakePair<const Key, Value>(k, v)); }
 
             // erase wrapper
-            void erase(const Key &k) {
-                base::erase(MakePair<const Key, Value>(k, Value()));
-            }
+            void erase(const Key &k) { base::erase(MakePair<const Key, Value>(k, Value())); }
 
             // count wrapper
-            unsigned int count(const Key &k) {
-                return base::count(MakePair<const Key, Value>(k, Value()));
-            }
+            unsigned int count(const Key &k) { return base::count(MakePair<const Key, Value>(k, Value())); }
 
             HashMap(bool (*_pred)(const Pair<const Key, Value> &a, const Pair<const Key, Value> &b) = isEqualKey<Key, Value>,
                     unsigned long (*_hash)(const Pair<const Key, Value> &val) = hashByKey<Key, Value>, double _alpha = 1.0) :

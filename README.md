@@ -20,5 +20,6 @@
 ## TODO
 - ~~add allocator~~
 - ~~rewrite allocation granularity *(from xx_node<T> to just T)*~~
+- rewrite tree with AVL or Red-Black tree
 - improve code style
 - add more test cases

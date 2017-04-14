@@ -31,6 +31,7 @@ namespace TinySTL {
             // remove next element
             void pop() { data.pop_front(); }
 
+            // swap content
             void swap(Queue<T> &other) { this->data.swap(other.data); }
 
         private:

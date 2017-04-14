@@ -11,6 +11,9 @@ namespace TinySTL {
         M first;
         N second;
 
+        bool operator ==(const Pair<M, N> &other) { return this->first == other.first && this->second == other.second; }
+        bool operator !=(const Pair<M, N> &other) { return this->first != other.first || this->second != other.second; }
+
         Pair() {}
         Pair(M _first, N _second) : first(_first), second(_second) {}
     };

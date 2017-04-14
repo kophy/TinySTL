@@ -7,7 +7,6 @@
 #include "utils.hpp"
 
 namespace TinySTL {
-
     template <typename T, class Alloc = Allocator<T>>
     class HashTable {
         public:
@@ -51,6 +50,7 @@ namespace TinySTL {
                 entry_number = 0;
             }
 
+            // constructor
             HashTable(bool (*_pred)(const T &a, const T &b) = Equal<T>, unsigned long (*_hash)(const T &val) = Hash<T>,
                       double _alpha = 1.0) : alpha(_alpha), hash(_hash), pred(_pred) {
                 data = new Vector<List<T, Alloc>>(1);
@@ -58,6 +58,7 @@ namespace TinySTL {
                 entry_number = 0;
             }
 
+            // destructor
             ~HashTable() { delete data; }
 
         protected:
@@ -80,6 +81,52 @@ namespace TinySTL {
                 delete data;
                 data = temp;
                 bucket_number = new_bucket_number;
+            }
+
+        public:
+            typedef typename List<T>::Iterator list_iter;
+            typedef Pair<unsigned int, list_iter> HashEntry;
+
+            HashEntry findBegin() {
+                unsigned int id;
+                list_iter pos;
+                if (this->empty()) {
+                    id = bucket_number - 1;
+                    pos = (*data).back().end();
+                } else {
+                    id = 0;
+                    while ((*data)[id].empty())
+                        ++id;
+                    pos = (*data)[id].begin();
+                }
+                return MakePair<unsigned int, list_iter>(id, pos);
+            }
+
+            HashEntry findEnd() {
+                unsigned int id = bucket_number;
+                list_iter pos = (*data).back().end();
+                return MakePair<unsigned int, list_iter>(id, pos);
+            }
+
+            HashEntry findNext(const HashEntry &e) {
+                unsigned int id = e.first;
+                list_iter pos = e.second;
+                ++pos;
+                while (pos == (*data)[id].end()) {
+                    ++id;
+                    if (id == (*data).size())
+                        break;
+                    pos = (*data)[id].begin();
+                }
+                return MakePair<unsigned int, list_iter>(id, pos);
+            }
+
+            HashEntry find(const T &val) {
+                unsigned int id = this->hash(val) % bucket_number;
+                for (auto iter = (*data)[id].begin(); iter != (*data)[id].end(); ++iter)
+                    if (pred(*iter, val))
+                        return MakePair<unsigned int, list_iter>(id, iter);
+                return findEnd();
             }
     };
 };

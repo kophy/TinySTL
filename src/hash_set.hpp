@@ -11,10 +11,10 @@ namespace TinySTL {
         public:
             class Iterator : public ForwardIterator {
                 public:
-                    bool operator ==(const Iterator &I) { return (this->bucket_id == I.bucket_id && this->pos == I.pos); }
-                    bool operator !=(const Iterator &I) { return (this->bucket_id != I.bucket_id || this->pos != I.pos); }
+                    bool operator ==(const Iterator &I) { return (this->data == I.data && this->e == I.e); }
+                    bool operator !=(const Iterator &I) { return (this->data != I.data || this->e != I.e); }
 
-                    const T &operator *() { return *pos; }
+                    const T &operator *() { return *(e.second); }
 
                     Iterator operator ++() {
                         advance();
@@ -27,63 +27,25 @@ namespace TinySTL {
                         return temp;
                     }
 
-                    Iterator(Vector<List<T>> *_data = nullptr) : data(_data), bucket_id(0) {}
+                    Iterator(HashSet<T> *_data, typename HashSet<T>::HashEntry _e) : data(_data), e(_e) {}
 
                 private:
-                    Vector<List<T>> *data;
-                    unsigned int bucket_id;
-                    typename List<T>::Iterator pos;
+                    HashSet<T> *data;
+                    typename HashSet<T>::HashEntry e;
 
-                    void advance() {
-                        ++pos;
-                        while (pos == (*data)[bucket_id].end()) {
-                            ++bucket_id;
-                            if (bucket_id == (*data).size())
-                                break;
-                            pos = (*data)[bucket_id].begin();
-                        }
-                    }
+                    void advance() { e = data->findNext(e); }
 
                 friend class HashSet<T>;
             };
 
             // iterator to the beginning
-            Iterator begin() {
-                Iterator temp(base::data);
-                if (this->empty()) {
-                    temp.bucket_id = base::bucket_number - 1;
-                    temp.pos = (*base::data).back().end();
-                } else {
-                    int id = 0;
-                    while ((*base::data)[id].empty())
-                        ++id;
-                    temp.bucket_id = id;
-                    temp.pos = (*base::data)[id].begin();
-                }
-                return temp;
-            }
+            Iterator begin() { return Iterator(this, base::findBegin()); }
 
             // iterator to the end
-            Iterator end() {
-                Iterator temp(base::data);
-                temp.bucket_id = base::bucket_number;
-                temp.pos = (*base::data).back().end();
-                return temp;
-            }
+            Iterator end()   { return Iterator(this, base::findEnd()); }
 
             // iterator to element with specific key
-            Iterator find(const T &val) {
-                unsigned int id = this->hash(val) % base::bucket_number;
-                Iterator temp;
-                temp.bucket_id = id;
-                for (auto iter = (*base::data)[id].begin(); iter != (*base::data)[id].end(); ++iter) {
-                    if (base::pred(*iter, val)) {
-                        temp.pos = iter;
-                        return temp;
-                    }
-                }
-                return this->end();
-            }
+            Iterator find(const T &val) { return Iterator(this, base::find(val)); }
 
             // constructor
             HashSet(bool (*_pred)(const T &a, const T &b) = Equal<T>, unsigned long (*_hash)(const T &val) = Hash<T>,

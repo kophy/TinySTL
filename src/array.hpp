@@ -18,9 +18,7 @@ namespace TinySTL {
             }
 
             // access specified elements
-            T &operator [](int pos) {
-                return data[pos];
-            }
+            T &operator [](int pos) { return data[pos]; }
 
             // access first element
             T &front() {
@@ -45,16 +43,8 @@ namespace TinySTL {
 
                     T &operator *() { return *curr; }
 
-                    Iterator operator ++() {
-                        ++curr;
-                        return *this;
-                    }
-
-                    Iterator operator ++(int dummy) {
-                        auto temp = *this;
-                        ++curr;
-                        return temp;
-                    }
+                    Iterator operator ++() { return Iterator(++curr); }
+                    Iterator operator ++(int dummy) { return Iterator(curr++); }
 
                     Iterator(T *_curr = nullptr) : curr(_curr) {}
 
@@ -71,16 +61,8 @@ namespace TinySTL {
 
                     T &operator *() { return *curr; }
 
-                    ReverseIterator operator ++() {
-                        --curr;
-                        return *this;
-                    }
-
-                    ReverseIterator operator ++(int dummy) {
-                        auto temp = *this;
-                        --curr;
-                        return temp;
-                    }
+                    ReverseIterator operator ++() { return ReverseIterator(--curr); }
+                    ReverseIterator operator ++(int dummy) { return ReverseIterator(curr--); }
 
                     ReverseIterator(T *_curr = nullptr) : curr(_curr) {}
 
