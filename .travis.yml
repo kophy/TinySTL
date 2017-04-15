@@ -4,8 +4,11 @@ dist: trusty
 
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
     packages:
-      - libusb-1.0-0-dev
+    - gcc-4.8
+    - g++-4.8
 
 # Change this to your needs
 script: make && make test_all
